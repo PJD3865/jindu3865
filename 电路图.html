@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电路图画板 - 啤酒肚老师</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:14px/1.5 "Microsoft YaHei",sans-serif;background:#1a1d23;color:#e8ecf1;overflow:hidden}
+.app{display:grid;grid-template-rows:50px 1fr 30px;height:100vh}
+.topbar{display:flex;align-items:center;padding:0 16px;background:#23272f;border-bottom:1px solid #111;gap:10px}
+.topbar h1{font-size:16px;color:#ffc35a;letter-spacing:2px}
+.topbar button{padding:5px 12px;border:1px solid #4a5560;border-radius:5px;background:#2d333c;color:#cdd5dd;cursor:pointer;font-size:12px}
+.topbar button:hover{background:#3a424d;color:#fff}
+.main{display:grid;grid-template-columns:160px 1fr 200px;min-height:0}
+.sidebar{background:#23272f;border-right:1px solid #111;padding:10px;overflow-y:auto}
+.propsbar{background:#23272f;border-left:1px solid #111;padding:12px;overflow-y:auto}
+.propsbar h3{font-size:12px;color:#ffc35a;margin:0 0 10px}
+.propsbar .row{margin-bottom:10px;font-size:12px;color:#cdd5dd}
+.propsbar label{display:block;margin-bottom:3px;color:#8893a0}
+.propsbar input{width:100%;padding:4px 6px;background:#1a1d23;color:#fff;border:1px solid #4a5560;border-radius:3px;font-size:12px}
+.propsbar button{width:100%;padding:6px;margin-bottom:6px;border:1px solid #4a5560;border-radius:4px;background:#2d333c;color:#cdd5dd;cursor:pointer;font-size:12px}
+.propsbar button:hover{background:#3a4a5a;color:#fff}
+.propsbar .hint{color:#667;font-size:11px;margin-top:8px;line-height:1.5}
+.sidebar h3{font-size:11px;color:#8893a0;margin:8px 0 6px;letter-spacing:1px}
+.comp-btn{display:flex;align-items:center;gap:6px;width:100%;padding:6px 8px;margin-bottom:4px;border:1px solid #3a424d;border-radius:5px;background:#2a3038;color:#cdd5dd;cursor:pointer;font-size:12px;text-align:left}
+.comp-btn:hover{background:#3a4a5a;border-color:#54a8f5}
+.stage{position:relative;background:#1a3a2e;overflow:hidden}
+svg{width:100%;height:100%;display:block}
+.footer{display:flex;align-items:center;padding:0 16px;background:#23272f;border-top:1px solid #111;font-size:11px;color:#8893a0}
+.footer b{color:#ffc35a;margin-right:8px}
+/* 元件样式 */
+.comp{cursor:move}
+.comp text{font-family:"Times New Roman",serif;font-style:italic;font-size:13px;fill:#f0e6c8;user-select:none}
+.port{cursor:crosshair}
+.port circle{fill:#1a3a2e;stroke:#f0e6c8;stroke-width:1.5;pointer-events:all}
+.port:hover circle{fill:#54a8f5}
+.wire-line{stroke:#ff6b5a;stroke-width:2.5;fill:none;opacity:.7}
+.wire-active{stroke:#ff6b5a;stroke-width:2.5;fill:none}
+.flow-dot{fill:#ffd0a0;filter:drop-shadow(0 0 3px #ff8a5a)}
+.wire-hit{stroke:transparent;stroke-width:12;fill:none;pointer-events:none}
+body.delete-mode .wire-hit{pointer-events:stroke;cursor:pointer}
+body.delete-mode .wire-hit:hover{stroke:rgba(255,107,90,.2)}
+.meter-text{font-family:"Times New Roman",serif;font-style:normal;font-size:11px;fill:#f0e6c8;text-anchor:middle}
+.lamp-glow{fill:#fff3b0;opacity:0;transition:opacity .2s}
+.lamp-on .lamp-glow{opacity:.9}
+.lamp-on .lamp-cross{stroke:#ffc35a}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <h1>电路图画板</h1>
+    <button id="clearBtn">清空</button>
+    <button id="undoBtn">撤回</button>
+    <button id="currentBtn">电流方向：开</button>
+    <button id="deleteBtn">删除模式：关</button>
+    <span style="flex:1"></span>
+    <span style="font-size:11px;color:#8893a0">点左侧元件添加 → 拖动移动 → 点端点连线 → 点开关开合</span>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <h3>电源</h3>
+      <button class="comp-btn" data-type="battery">🔋 电池组</button>
+      <h3>控制</h3>
+      <button class="comp-btn" data-type="switch">🔘 开关</button>
+      <h3>用电器</h3>
+      <button class="comp-btn" data-type="lamp">💡 灯泡</button>
+      <button class="comp-btn" data-type="resistor">▭ 定值电阻</button>
+      <button class="comp-btn" data-type="rheostat">📏 滑动变阻器</button>
+      <h3>测量</h3>
+      <button class="comp-btn" data-type="ammeter">Ⓐ 电流表</button>
+      <button class="comp-btn" data-type="voltmeter">Ⓥ 电压表</button>
+    </div>
+    <div class="stage">
+      <svg id="canvas">
+        <g id="wireLayer"></g>
+        <g id="compLayer"></g>
+        <g id="overlayLayer"></g>
+      </svg>
+    </div>
+    <div class="propsbar">
+      <h3>属性</h3>
+      <div id="propsBody">
+        <div class="hint">点一个元件，这里就能改它的参数</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><b>啤酒肚老师专属</b> 电路图画板 · 学生版 · 拖元件到画布，点端点连线</div>
+</div>
+
+<script>
+const svg = document.getElementById('canvas');
+const compLayer = document.getElementById('compLayer');
+const wireLayer = document.getElementById('wireLayer');
+const overlayLayer = document.getElementById('overlayLayer');
+const NS = 'http://www.w3.org/2000/svg';
+
+let comps = [];      // 元件数组
+let wires = [];      // 连线数组
+let nextId = 1;
+let dragComp = null;
+let dragOffset = {x:0,y:0};
+let pendingPort = null;  // 正在连线的起点
+let pendingPoints = [];  // 连线过程中的拐点
+let deleteMode = false;
+let showCurrent = true;
+let history = [];  // 操作历史栈
+
+function pushHistory() {
+  history.push({ comps: JSON.parse(JSON.stringify(comps)), wires: JSON.parse(JSON.stringify(wires)) });
+  if (history.length > 50) history.shift();
+}
+function undo() {
+  if (!history.length) return;
+  const h = history.pop();
+  comps = h.comps;
+  wires = h.wires;
+  compLayer.innerHTML = '';
+  for (const c of comps) renderComp(c);
+  renderWires();
+  solve();
+}
+
+// 元件定义：类型 → {宽高, 端口位置(相对), 画法}
+const COMP_DEFS = {
+  battery: {
+    w: 80, h: 60,
+    ports: { left:{x:0,y:30}, right:{x:80,y:30} },
+    draw(g, c) {
+      g.innerHTML = `
+        <line x1="25" y1="15" x2="25" y2="45" stroke="#f0e6c8" stroke-width="2.5"/>
+        <line x1="40" y1="22" x2="40" y2="38" stroke="#f0e6c8" stroke-width="5"/>
+        <text class="polarity" x="20" y="12">+</text>
+        <text class="polarity" x="43" y="12">−</text>`;
+    }
+  },
+  switch: {
+    w: 70, h: 50,
+    ports: { left:{x:0,y:25}, right:{x:70,y:25} },
+    draw(g, c) {
+      const closed = c.state.closed;
+      g.innerHTML = `
+        <circle cx="0" cy="25" r="3" fill="#f0e6c8"/>
+        <circle cx="70" cy="25" r="3" fill="#f0e6c8"/>
+        <line x1="0" y1="25" x2="${closed?70:55}" y2="${closed?25:8}" stroke="#f0e6c8" stroke-width="2" stroke-linecap="round"/>
+        <text x="30" y="45">S</text>`;
+    }
+  },
+  lamp: {
+    w: 50, h: 50,
+    ports: { left:{x:0,y:25}, right:{x:50,y:25} },
+    draw(g, c) {
+      g.innerHTML = `
+        <circle class="lamp-glow" cx="25" cy="25" r="22"/>
+        <circle cx="25" cy="25" r="16" fill="none" stroke="#f0e6c8" stroke-width="1.5"/>
+        <line class="lamp-cross" x1="14" y1="14" x2="36" y2="36" stroke="#f0e6c8" stroke-width="1.2"/>
+        <line class="lamp-cross" x1="36" y1="14" x2="14" y2="36" stroke="#f0e6c8" stroke-width="1.2"/>
+        <text x="25" y="48" text-anchor="middle">L</text>`;
+      if (c.state.on) g.closest('.comp').classList.add('lamp-on');
+      else g.closest('.comp').classList.remove('lamp-on');
+    }
+  },
+  resistor: {
+    w: 70, h: 40,
+    ports: { left:{x:0,y:20}, right:{x:70,y:20} },
+    draw(g, c) {
+      g.innerHTML = `
+        <rect x="15" y="10" width="40" height="20" fill="none" stroke="#f0e6c8" stroke-width="1.5"/>
+        <text x="35" y="24" text-anchor="middle">${c.state.r||'R'}</text>`;
+    }
+  },
+  rheostat: {
+    w: 90, h: 50,
+    ports: { left:{x:0,y:25}, right:{x:90,y:25}, slider:{x:45,y:0} },
+    draw(g, c) {
+      const r = c.state.maxR || 20;
+      const ratio = c.state.sliderRatio ?? 0.5;
+      g.innerHTML = `
+        <rect x="15" y="18" width="60" height="14" fill="none" stroke="#f0e6c8" stroke-width="1.5"/>
+        <line x1="${15+60*ratio}" y1="10" x2="${15+60*ratio}" y2="18" stroke="#ffc35a" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="${15+60*ratio}" cy="10" r="4" fill="#ffc35a"/>
+        <text x="45" y="42" text-anchor="middle">${r}Ω</text>`;
+    }
+  },
+  ammeter: {
+    w: 50, h: 50,
+    ports: { left:{x:0,y:25}, right:{x:50,y:25} },
+    draw(g, c) {
+      g.innerHTML = `
+        <circle cx="25" cy="25" r="18" fill="none" stroke="#f0e6c8" stroke-width="1.5"/>
+        <text x="25" y="29" text-anchor="middle" font-size="14" font-style="italic">A</text>
+        <text class="meter-text" x="25" y="52">${(c.state.reading||0).toFixed(2)}A</text>`;
+    }
+  },
+  voltmeter: {
+    w: 50, h: 50,
+    ports: { left:{x:0,y:25}, right:{x:50,y:25} },
+    draw(g, c) {
+      g.innerHTML = `
+        <circle cx="25" cy="25" r="18" fill="none" stroke="#f0e6c8" stroke-width="1.5"/>
+        <text x="25" y="29" text-anchor="middle" font-size="14" font-style="italic">V</text>
+        <text class="meter-text" x="25" y="52">${(c.state.reading||0).toFixed(1)}V</text>`;
+    }
+  }
+};
+
+function svgPoint(evt) {
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function addComp(type, x, y) {
+  pushHistory();
+  const def = COMP_DEFS[type];
+  const initState = { closed: type==='switch'?false:true, on: false, reading: 0 };
+  if (type === 'battery') initState.voltage = 3;
+  if (type === 'resistor') initState.r = 6;
+  if (type === 'rheostat') { initState.maxR = 20; initState.sliderRatio = 0.5; }
+  const c = { id: nextId++, type, x: x||200, y: y||200, state: initState };
+  comps.push(c);
+  renderComp(c);
+}
+
+function renderComp(c) {
+  const def = COMP_DEFS[c.type];
+  let g = compLayer.querySelector(`[data-id="${c.id}"]`);
+  if (!g) {
+    g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'comp');
+    g.dataset.id = c.id;
+    compLayer.appendChild(g);
+  }
+  const rot = c.rotation || 0;
+  const bw = rot ? def.h : def.w;
+  const bh = rot ? def.w : def.h;
+  g.setAttribute('transform', `translate(${c.x - bw/2},${c.y - bh/2}) rotate(${rot},${bw/2},${bh/2})`);
+  // 透明热区，扩大点击范围
+  let hitArea = g.querySelector('.hit-area');
+  if (!hitArea) {
+    hitArea = document.createElementNS(NS, 'rect');
+    hitArea.setAttribute('class', 'hit-area');
+    hitArea.setAttribute('fill', 'transparent');
+    g.insertBefore(hitArea, g.firstChild);
+  }
+  hitArea.setAttribute('x', -15);
+  hitArea.setAttribute('y', -15);
+  hitArea.setAttribute('width', def.w + 30);
+  hitArea.setAttribute('height', def.h + 30);
+  def.draw(g, c);
+  // 端口
+  g.querySelectorAll('.port').forEach(p => p.remove());
+  for (const [name, pos] of Object.entries(def.ports)) {
+    const pg = document.createElementNS(NS, 'g');
+    pg.setAttribute('class', 'port');
+    pg.dataset.compId = c.id;
+    pg.dataset.port = name;
+    pg.innerHTML = `<circle cx="${pos.x}" cy="${pos.y}" r="7"/>`;
+    g.appendChild(pg);
+  }
+  // 标签文字反向旋转，保持水平（+ - 极性符号除外）
+  if (rot) {
+    g.querySelectorAll('text:not(.polarity)').forEach(t => {
+      t.setAttribute('transform', `rotate(${-rot},${def.w/2},${def.h/2})`);
+    });
+  }
+}
+
+function renderWires() {
+  wireLayer.innerHTML = '';
+  for (const w of wires) {
+    const a = getPortPos(w.aComp, w.aPort);
+    const b = getPortPos(w.bComp, w.bPort);
+    // 横平竖直 L 形折线，带引出段
+    const dx = Math.abs(b.x - a.x), dy = Math.abs(b.y - a.y);
+    const ext = 12; // 引出段长度
+    let d;
+    if (dx >= dy) {
+      // 先横后竖：从 a 先水平走 ext，再横到 b.x，再竖到 b.y
+      const dirX = Math.sign(b.x - a.x);
+      d = `M${a.x},${a.y} L${a.x + dirX*ext},${a.y} L${b.x},${a.y} L${b.x},${b.y}`;
+    } else {
+      // 先竖后横：从 a 先竖直走 ext，再竖到 b.y，再横到 b.x
+      const dirY = Math.sign(b.y - a.y);
+      d = `M${a.x},${a.y} L${a.x},${a.y + dirY*ext} L${a.x},${b.y} L${b.x},${b.y}`;
+    }
+    const hasCurrent = showCurrent && w.current;
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('class', hasCurrent ? 'wire-active' : 'wire-line');
+    p.setAttribute('d', d);
+    p.dataset.wireId = w.id;
+    wireLayer.appendChild(p);
+    if (hasCurrent) {
+      // 流动小圆点
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('class', 'flow-dot');
+      dot.setAttribute('r', '3.5');
+      const anim = document.createElementNS(NS, 'animateMotion');
+      anim.setAttribute('dur', '1s');
+      anim.setAttribute('repeatCount', 'indefinite');
+      anim.setAttribute('path', d);
+      if (!w.dirFromPos) anim.setAttribute('keyPoints', '1;0');
+      dot.appendChild(anim);
+      wireLayer.appendChild(dot);
+      // 第二个圆点，错开位置
+      const dot2 = document.createElementNS(NS, 'circle');
+      dot2.setAttribute('class', 'flow-dot');
+      dot2.setAttribute('r', '3.5');
+      const anim2 = document.createElementNS(NS, 'animateMotion');
+      anim2.setAttribute('dur', '1s');
+      anim2.setAttribute('begin', '0.5s');
+      anim2.setAttribute('repeatCount', 'indefinite');
+      anim2.setAttribute('path', d);
+      if (!w.dirFromPos) anim2.setAttribute('keyPoints', '1;0');
+      dot2.appendChild(anim2);
+      wireLayer.appendChild(dot2);
+    }
+    const hit = document.createElementNS(NS, 'path');
+    hit.setAttribute('class', 'wire-hit');
+    hit.setAttribute('d', d);
+    hit.dataset.wireId = w.id;
+    hit.addEventListener('click', e => {
+      if (deleteMode) {
+        pushHistory();
+        wires = wires.filter(x => x.id !== w.id);
+        renderWires();
+        solve();
+      }
+    });
+    wireLayer.appendChild(hit);
+  }
+}
+
+function getPortPos(compId, portName) {
+  const c = comps.find(x => x.id === compId);
+  const def = COMP_DEFS[c.type];
+  const p = def.ports[portName];
+  const rot = (c.rotation || 0) * Math.PI / 180;
+  // 元件中心在 c.x, c.y
+  // 端口相对元件中心的偏移（未旋转）
+  const relX = p.x - def.w/2;
+  const relY = p.y - def.h/2;
+  // 旋转
+  const rx = relX * Math.cos(rot) - relY * Math.sin(rot);
+  const ry = relX * Math.sin(rot) + relY * Math.cos(rot);
+  return { x: c.x + rx, y: c.y + ry };
+}
+
+// 连线：从 pendingPort 到点击的端口
+svg.addEventListener('click', e => {
+  const port = e.target.closest('.port');
+  if (port) {
+    const compId = Number(port.dataset.compId);
+    const portName = port.dataset.port;
+    if (!pendingPort) {
+      pendingPort = { compId, port: portName };
+      pendingPoints = [];
+      e.stopPropagation();
+      return;
+    }
+    if (pendingPort.compId === compId && pendingPort.port === portName) {
+      pendingPort = null;
+      pendingPoints = [];
+      return;
+    }
+    const dup = wires.find(w =>
+      (w.aComp===pendingPort.compId && w.aPort===pendingPort.port && w.bComp===compId && w.bPort===portName) ||
+      (w.bComp===pendingPort.compId && w.bPort===pendingPort.port && w.aComp===compId && w.aPort===portName));
+    if (!dup) {
+      pushHistory();
+      wires.push({ id: Date.now()+Math.random(), aComp: pendingPort.compId, aPort: pendingPort.port, bComp: compId, bPort: portName, current: 0 });
+    }
+    pendingPort = null;
+    renderWires();
+    solve();
+    e.stopPropagation();
+    return;
+  }
+  // 点元件
+  const sw = e.target.closest('.comp');
+  if (sw && !e.target.closest('.port')) {
+    const c = comps.find(x => x.id === Number(sw.dataset.id));
+    if (c && c.type === 'switch') {
+      c.state.closed = !c.state.closed;
+      renderComp(c);
+      solve();
+    }
+    if (deleteMode && sw && !e.target.closest('.port')) {
+      pushHistory();
+      comps = comps.filter(x => x.id !== c.id);
+      wires = wires.filter(w => w.aComp!==c.id && w.bComp!==c.id);
+      sw.remove();
+      renderWires();
+      solve();
+    }
+    if (!deleteMode && c) showParamPanel(c);
+  }
+  pendingPort = null;
+  pendingPoints = [];
+});
+
+// 右侧属性面板
+let selectedComp = null;
+function showParamPanel(c) {
+  selectedComp = c;
+  const body = document.getElementById('propsBody');
+  let html = '';
+  html += `<div style="margin-bottom:10px;color:#ffc35a;font-weight:600">${c.type}</div>`;
+  // 旋转按钮
+  html += `<button onclick="rotateSelected()">⟳ 旋转90°</button>`;
+  html += `<div class="row"><label>旋转角度: ${c.rotation||0}°</label><input type="range" min="0" max="360" step="15" value="${c.rotation||0}" oninput="selectedComp.rotation=Number(this.value);renderComp(selectedComp);renderWires();showParamPanel(selectedComp)"></div>`;
+  if (c.type === 'battery') {
+    html += `<div class="row"><label>电压 (V)</label><input type="number" value="${c.state.voltage||3}" onchange="selectedComp.state.voltage=Number(this.value)"></div>`;
+  } else if (c.type === 'resistor') {
+    html += `<div class="row"><label>阻值 (Ω)</label><input type="number" value="${c.state.r||6}" onchange="selectedComp.state.r=Number(this.value);renderComp(selectedComp)"></div>`;
+  } else if (c.type === 'rheostat') {
+    html += `<div class="row"><label>最大阻值 (Ω)</label><input type="number" value="${c.state.maxR||20}" onchange="selectedComp.state.maxR=Number(this.value);renderComp(selectedComp)"></div>`;
+    html += `<div class="row"><label>滑片位置: ${Math.round((c.state.sliderRatio??0.5)*100)}%</label><input type="range" min="0" max="1" step="0.05" value="${c.state.sliderRatio??0.5}" oninput="selectedComp.state.sliderRatio=Number(this.value);renderComp(selectedComp);renderWires()"></div>`;
+  } else if (c.type === 'switch') {
+    html += `<button onclick="toggleSwitch()">${c.state.closed?'断开开关':'闭合开关'}</button>`;
+  } else {
+    html += `<div class="hint">此元件无可调参数</div>`;
+  }
+  body.innerHTML = html;
+}
+function rotateSelected(){
+  if(!selectedComp) return;
+  selectedComp.rotation = ((selectedComp.rotation || 0) + 90) % 360;
+  renderComp(selectedComp);
+  renderWires();
+  showParamPanel(selectedComp);
+}
+function toggleSwitch(){
+  if(!selectedComp) return;
+  selectedComp.state.closed = !selectedComp.state.closed;
+  renderComp(selectedComp);
+  solve();
+  showParamPanel(selectedComp);
+}
+
+// 拖动元件
+svg.addEventListener('mousedown', e => {
+  const g = e.target.closest('.comp');
+  if (g && !e.target.closest('.port')) {
+    const c = comps.find(x => x.id === Number(g.dataset.id));
+    const pt = svgPoint(e);
+    dragComp = c;
+    dragOffset = { x: pt.x - c.x, y: pt.y - c.y };
+  }
+});
+window.addEventListener('mousemove', e => {
+  if (!dragComp) return;
+  const pt = svgPoint(e);
+  dragComp.x = pt.x - dragOffset.x;
+  dragComp.y = pt.y - dragOffset.y;
+  renderComp(dragComp);
+  renderWires();
+});
+window.addEventListener('mouseup', () => { dragComp = null; });
+
+// 左侧添加元件
+document.querySelectorAll('.comp-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    const stage = svg.getBoundingClientRect();
+    addComp(type, 100 + Math.random()*200, 100 + Math.random()*200);
+  });
+});
+
+// 清空
+document.getElementById('clearBtn').addEventListener('click', () => {
+  pushHistory();
+  comps = []; wires = [];
+  compLayer.innerHTML = ''; wireLayer.innerHTML = '';
+});
+
+document.getElementById('undoBtn').addEventListener('click', undo);
+
+// 电流方向开关
+document.getElementById('currentBtn').addEventListener('click', function(){
+  showCurrent = !showCurrent;
+  this.textContent = '电流方向：' + (showCurrent ? '开' : '关');
+  renderWires();
+});
+
+// 删除模式
+document.getElementById('deleteBtn').addEventListener('click', function(){
+  deleteMode = !deleteMode;
+  this.textContent = '删除模式：' + (deleteMode ? '开' : '关');
+  this.style.background = deleteMode ? '#c0392b' : '';
+  document.body.classList.toggle('delete-mode', deleteMode);
+});
+
+// 电路求解：并查集分析连通性
+function solve() {
+  // 1. 收集所有节点：每个元件的每个端口是一个节点
+  // 节点 key = compId:port
+  const parent = {};
+  function find(x) {
+    if (!parent[x]) parent[x] = x;
+    if (parent[x] !== x) parent[x] = find(parent[x]);
+    return parent[x];
+  }
+  function union(a, b) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent[rb] = ra;
+  }
+
+  // 2. 先注册所有端口
+  for (const c of comps) {
+    const def = COMP_DEFS[c.type];
+    for (const port of Object.keys(def.ports)) {
+      find(`${c.id}:${port}`);
+    }
+  }
+
+  // 3. 导线连接的端口合并
+  for (const w of wires) {
+    union(`${w.aComp}:${w.aPort}`, `${w.bComp}:${w.bPort}`);
+  }
+
+  // 4. 开关闭合时两端连通；电流表近似导线（串联）；电压表内阻无穷大不连通
+  for (const c of comps) {
+    const def = COMP_DEFS[c.type];
+    const ports = Object.keys(def.ports);
+    if (c.type === 'switch' && c.state.closed) {
+      union(`${c.id}:${ports[0]}`, `${c.id}:${ports[1]}`);
+    }
+    if (c.type === 'ammeter') {
+      union(`${c.id}:${ports[0]}`, `${c.id}:${ports[1]}`);
+    }
+    // 电压表不合并（内阻极大）
+  }
+
+  // 5. 找电池
+  const battery = comps.find(c => c.type === 'battery');
+  if (!battery) {
+    for (const c of comps) { c.state.on = false; c.state.reading = 0; renderComp(c); }
+    for (const w of wires) w.current = false;
+    renderWires();
+    return;
+  }
+  const posSet = find(`${battery.id}:left`);
+  const negSet = find(`${battery.id}:right`);
+
+  // 6. 判断每个灯泡：两端是否分别在正负极集合
+  for (const c of comps) {
+    if (c.type !== 'lamp') continue;
+    const def = COMP_DEFS.lamp;
+    const ports = Object.keys(def.ports);
+    const a = find(`${c.id}:${ports[0]}`);
+    const b = find(`${c.id}:${ports[1]}`);
+    // 灯亮：一端连正极集合，一端连负极集合，且不被短路（两端不在同一集合）
+    const connectedPos = (a === posSet || b === posSet);
+    const connectedNeg = (a === negSet || b === negSet);
+    const sameSet = (a === b); // 被导线短接
+    c.state.on = connectedPos && connectedNeg && !sameSet;
+    renderComp(c);
+  }
+
+  // 7. 电流表读数：如果它串在正极到负极的通路上，有电流
+  for (const c of comps) {
+    if (c.type === 'ammeter') {
+      const def = COMP_DEFS.ammeter;
+      const ports = Object.keys(def.ports);
+      const a = find(`${c.id}:${ports[0]}`);
+      const b = find(`${c.id}:${ports[1]}`);
+      // 电流表两端分别在正负极集合 → 串在通路里
+      const hasCurrent = (a === posSet && b === negSet) || (a === negSet && b === posSet);
+      c.state.reading = hasCurrent ? 0.5 : 0;
+      renderComp(c);
+    }
+    if (c.type === 'voltmeter') {
+      const def = COMP_DEFS.voltmeter;
+      const ports = Object.keys(def.ports);
+      const a = find(`${c.id}:${ports[0]}`);
+      const b = find(`${c.id}:${ports[1]}`);
+      // 电压表两端分别在正负极集合 → 测到电源电压
+      const hasVoltage = (a === posSet && b === negSet) || (a === negSet && b === posSet);
+      c.state.reading = hasVoltage ? 3 : 0;
+      renderComp(c);
+    }
+  }
+
+  // 8. 导线电流动画：在正极集合和负极集合之间的导线上有电流
+  for (const w of wires) {
+    const a = find(`${w.aComp}:${w.aPort}`);
+    const b = find(`${w.bComp}:${w.bPort}`);
+    // 导线跨接正极集合和负极集合 → 有电流
+    w.current = (a === posSet && b === negSet) || (a === negSet && b === posSet);
+    // 箭头方向：从正极端指向负极端
+    w.dirFromPos = (a === posSet); // true: a端是正极，箭头从a→b
+  }
+  renderWires();
+}
+</script>
+</body>
+</html>

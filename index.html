@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>啤酒肚老师专属平台</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a2a26;
+  --ink2: #5a6b65;
+  --brand: #1a5f4e;
+  --brand-dark: #0f4436;
+  --accent: #e8a838;
+  --bg: #f3f6f4;
+  --card: #ffffff;
+  --line: #d5ddd8;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ===== 密码门 ===== */
+.gate-wrap {
+  background: linear-gradient(160deg, #0f4436 0%, #1a5f4e 60%, #2a7a63 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.gate {
+  background: #fff;
+  border-radius: 12px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.25);
+}
+.gate .badge {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.gate h1 { font-size: 22px; margin-bottom: 6px; }
+.gate .sub { font-size: 14px; color: var(--ink2); margin-bottom: 22px; }
+.gate input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+}
+.gate input:focus { border-color: var(--brand); }
+.gate button {
+  width: 100%;
+  padding: 13px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.gate button:hover { background: var(--brand-dark); }
+.err { color: #d64545; font-size: 13px; margin-top: 10px; display: none; }
+
+/* ===== 主界面 ===== */
+.app { display: none; min-height: 100vh; flex-direction: column; }
+
+.hero {
+  background: linear-gradient(135deg, #0f4436 0%, #1a5f4e 100%);
+  color: #fff;
+  padding: 44px 32px 84px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -80px; top: -80px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,168,56,.25), transparent 70%);
+}
+.hero .tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--accent);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+.hero p { font-size: 14.5px; opacity: .88; max-width: 520px; line-height: 1.7; }
+
+.list-wrap {
+  max-width: 900px;
+  width: 100%;
+  margin: -56px auto 0;
+  padding: 0 32px 48px;
+  flex: 1;
+}
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+.list-head h2 { font-size: 17px; font-weight: 600; }
+.list-head span { font-size: 12px; color: var(--ink2); }
+
+.item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all .18s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.item:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26,95,78,.1);
+}
+.item .icon {
+  width: 48px; height: 48px;
+  flex: none;
+  border-radius: 8px;
+  background: #e8efeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item:hover .icon { background: var(--brand); }
+.item:hover .icon svg { stroke: #fff; }
+.item .icon svg { stroke: var(--brand); transition: stroke .18s; }
+.item .info { flex: 1; min-width: 0; }
+.item .info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.item .info p {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.item .arrow {
+  flex: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #f0f4f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  font-size: 14px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--ink2);
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+@media (max-width: 640px) {
+  .hero { padding: 36px 22px 76px; }
+  .hero h1 { font-size: 25px; }
+  .list-wrap { padding: 0 18px 36px; }
+  .item { padding: 14px; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="gate-wrap" id="gate">
+  <div class="gate">
+    <span class="badge">JINDU TEACHING</span>
+    <h1>啤酒肚老师专属平台</h1>
+    <p class="sub">请输入密码进入教学资源库。</p>
+    <input type="password" id="pwd" placeholder="密码" autofocus>
+    <button onclick="check()">进入平台</button>
+    <div class="err" id="err">密码错误，请重试</div>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <header class="hero">
+    <span class="tag">TEACHING RESOURCES</span>
+    <h1>啤酒肚老师专属平台</h1>
+    <p>课件 · 互动网页 · 教学资料，都放在这里。点卡片直接打开。</p>
+  </header>
+
+  <main class="list-wrap">
+    <div class="list-head">
+      <h2>我的资源</h2>
+      <span>点击卡片打开</span>
+    </div>
+
+    <!-- 资源列表：以后加新文件，就在这里加一个 <a class="item"> -->
+    <a class="item" href="物理.html" target="_blank">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info">
+        <h3>物理互动课件</h3>
+        <p>初中物理电学 · 电路实验台 · 串并联电路</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="item" href="电路图.html" target="_blank">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke-width="1.6"/>
+          <path d="M8 12h8M12 8v8" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info">
+        <h3>电路图画板</h3>
+        <p>二维标准电路图 · 拖元件连线 · 电流方向动画 · 上课讲题用</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="item" href="信息技术.html" target="_blank">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info">
+        <h3>信息技术</h3>
+       </div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="item" href="光的折射.html" target="_blank">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="info">
+        <h3>光的折射演示</h3>
+        <p>演示作用</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+
+
+
+  </main>
+
+  <footer>© 啤酒肚老师专属平台 · 教学资源库</footer>
+</div>
+
+<script>
+function check() {
+  var v = document.getElementById('pwd').value;
+  if (v === '8888') {
+    sessionStorage.setItem('ok', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+  } else {
+    document.getElementById('err').style.display = 'block';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd').focus();
+  }
+}
+document.getElementById('pwd').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') check();
+});
+if (sessionStorage.getItem('ok') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+}
+
+/* 防下载防护 */
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if (e.key === 'F12') e.preventDefault();
+  if (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) e.preventDefault();
+  if (e.ctrlKey && ['u','U','s','S','p','P'].includes(e.key)) e.preventDefault();
+});
+// 禁选文字、禁拖图片
+document.addEventListener('selectstart', function(e){ e.preventDefault(); });
+document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+document.body.style.userSelect = 'none';
+// 检测 DevTools：开了就清空页面
+setInterval(function(){
+  if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+    document.body.style.filter = 'blur(20px)';
+  }
+}, 1500);
+</script>
+
+</body>
+</html>

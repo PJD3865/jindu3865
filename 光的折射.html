@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="img-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com; media-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光的折射 - 平行玻璃砖演示</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://metis-online.fbcontent.cn/metis-misc/zgLDUdmazTYc0B4K6Cor.js"></script>
+    
+    <!-- p5.js -->
+    <script src="https://metis-online.fbcontent.cn/metis-misc/cnObWiSohGePYbyhB6LlQ.js"></script>
+
+    <!-- Anime.js -->
+    <script src="https://metis-online.fbcontent.cn/metis-misc/zZZY40t7WJC7UdQCPACm.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://metis-online.fbcontent.cn/metis-misc/blER0Bn7vsa2JER9IEssf8.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00f2ff',   // 科技蓝
+                        secondary: 'rgba(0, 242, 255, 0.1)',
+                        accent: '#ff0055',    // 激光红
+                        surface: 'rgba(15, 23, 42, 0.8)',
+                        text: '#e2e8f0'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            background-color: #000000;
+            color: #e2e8f0;
+        }
+        
+        /* 科技感滑块 */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #00f2ff;
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 0 0 10px #00f2ff;
+            border: 2px solid #fff;
+        }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .tech-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            border-radius: 16px;
+        }
+
+        .canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+        }
+
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .interactive-control {
+            pointer-events: auto;
+        }
+
+        /* 霓虹文字效果 */
+        .neon-text {
+            text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
+        }
+    </style>
+<script type="application/json" id="fx-resource-config" data-fx-resource-runtime="2">{"chatId":"C12ABFFC9F2A63A9945A8975C0C88760","env":"online","onlineUrl":"https://musk-online.fbcontent.cn/pub-musk-ai-studio/workflow/file/document/jpfbLaYhSwESPe3MQY7LPR.html?v=2"}</script><script async src="https://www.feixianglaoshi.com/resource-runtime/v2.js" data-fx-resource-runtime="2"></script></head>
+<body class="h-screen w-screen">
+
+    <!-- Canvas 容器 -->
+    <div id="canvas-container" class="canvas-container"></div>
+
+    <!-- UI 层 -->
+    <div class="ui-layer h-full flex flex-col justify-between p-4">
+        
+        <!-- 顶部：标题与数据显示 (保持在顶部以便观察) -->
+        <header class="flex justify-between items-start">
+            <div class="tech-panel p-5 interactive-control">
+                <h1 class="text-2xl font-bold text-primary neon-text mb-1">光的折射演示</h1>
+                <p class="text-gray-400 text-xs">平行玻璃砖光路追踪系统 | 滚轮缩放 • 右键旋转</p>
+            </div>
+            
+            <!-- 数据显示面板 -->
+            <div class="tech-panel p-5 interactive-control min-w-[220px]">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">入射角 $i$</span>
+                        <span class="text-primary font-mono font-bold text-lg" id="val-incidence">45.0°</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">折射角 $r$</span>
+                        <span class="text-accent font-mono font-bold text-lg" id="val-refraction">28.1°</span>
+                    </div>
+                    <div class="h-px bg-gray-700 my-2"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">折射率 $n$</span>
+                        <span class="text-white font-mono font-bold" id="val-n">1.50</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">侧移量 $\Delta x$</span>
+                        <span class="text-white font-mono font-bold" id="val-shift">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 左下角：控制面板与个人信息 -->
+        <div class="flex flex-col items-start mt-auto">
+            <div class="tech-panel p-6 interactive-control w-full max-w-md mb-4">
+                <div class="space-y-6">
+                    <!-- 滑块控制 -->
+                    <div>
+                        <label class="flex justify-between text-sm font-medium text-primary mb-2">
+                            <span>入射角调节</span>
+                            <span class="text-xs text-gray-400">0° - 85°</span>
+                        </label>
+                        <input type="range" id="slider-angle" min="0" max="85" value="45" step="0.1">
+                    </div>
+                    <div>
+                        <label class="flex justify-between text-sm font-medium text-primary mb-2">
+                            <span>玻璃折射率</span>
+                            <span class="text-xs text-gray-400">1.0 - 2.0</span>
+                        </label>
+                        <input type="range" id="slider-n" min="1.0" max="2.0" value="1.5" step="0.01">
+                    </div>
+
+                    <!-- 开关控制 -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="check-normal" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+                            </div>
+                            <span class="text-xs text-gray-300 group-hover:text-primary transition-colors">显示法线</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="check-values" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+                            </div>
+                            <span class="text-xs text-gray-300 group-hover:text-primary transition-colors">显示数值</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="check-particles" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+                            </div>
+                            <span class="text-xs text-gray-300 group-hover:text-primary transition-colors">光子追踪</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="check-extend" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+                            </div>
+                            <span class="text-xs text-gray-300 group-hover:text-primary transition-colors">延长线</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人信息 Footer -->
+            <div class="tech-panel px-4 py-2 interactive-control">
+                <p class="text-primary text-sm font-medium tracking-wide">
+                    河南省睢县高级中学 <span class="text-white ml-1">李仲旭</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 音频资源 - 详细讲解版
+        const audioAngle = new Audio('https://metis-online.fbcontent.cn/metis-voice/1739343952000_0.mp3');
+        const audioIndex = new Audio('https://metis-online.fbcontent.cn/metis-voice/1739343952000_1.mp3');
+        
+        // 状态管理
+        const state = {
+            angle: 45,
+            n: 1.5,
+            showNormal: true,
+            showValues: true,
+            showParticles: true,
+            showExtend: false,
+            glassWidth: 300,
+            glassHeight: 150,
+            zoom: 1.0,
+            rotation: 0
+        };
+
+        // DOM 元素
+        const els = {
+            sliderAngle: document.getElementById('slider-angle'),
+            sliderN: document.getElementById('slider-n'),
+            checkNormal: document.getElementById('check-normal'),
+            checkValues: document.getElementById('check-values'),
+            checkParticles: document.getElementById('check-particles'),
+            checkExtend: document.getElementById('check-extend'),
+            valIncidence: document.getElementById('val-incidence'),
+            valRefraction: document.getElementById('val-refraction'),
+            valN: document.getElementById('val-n'),
+            valShift: document.getElementById('val-shift')
+        };
+
+        // 播放控制
+        let currentAudio = null;
+        function playAudio(audio) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = audio;
+            currentAudio.play().catch(e => console.log("Audio play failed (interaction needed):", e));
+        }
+
+        // 事件监听
+        els.sliderAngle.addEventListener('input', (e) => state.angle = parseFloat(e.target.value));
+        els.sliderN.addEventListener('input', (e) => state.n = parseFloat(e.target.value));
+        
+        // 拖动结束时触发语音讲解
+        els.sliderAngle.addEventListener('change', () => playAudio(audioAngle));
+        els.sliderN.addEventListener('change', () => playAudio(audioIndex));
+
+        els.checkNormal.addEventListener('change', (e) => state.showNormal = e.target.checked);
+        els.checkValues.addEventListener('change', (e) => state.showValues = e.target.checked);
+        els.checkParticles.addEventListener('change', (e) => state.showParticles = e.target.checked);
+        els.checkExtend.addEventListener('change', (e) => state.showExtend = e.target.checked);
+
+        // p5.js 逻辑
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            textFont('sans-serif');
+            // 禁用右键菜单以支持右键交互
+            document.oncontextmenu = () => false;
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function mouseWheel(event) {
+            // 滚轮缩放
+            state.zoom -= event.delta * 0.001;
+            state.zoom = constrain(state.zoom, 0.5, 3.0);
+            return false; // 阻止默认滚动
+        }
+
+        // 粒子系统
+        let particles = [];
+        class Photon {
+            constructor(path) {
+                this.path = path;
+                this.currentSeg = 0;
+                this.progress = 0;
+                this.speed = 0.02;
+                this.finished = false;
+            }
+
+            update() {
+                this.progress += this.speed;
+                if (this.progress >= 1) {
+                    this.progress = 0;
+                    this.currentSeg++;
+                    if (this.currentSeg >= this.path.length - 1) {
+                        this.finished = true;
+                    }
+                }
+            }
+
+            draw() {
+                if (this.finished) return;
+                const p1 = this.path[this.currentSeg];
+                const p2 = this.path[this.currentSeg + 1];
+                const x = lerp(p1.x, p2.x, this.progress);
+                const y = lerp(p1.y, p2.y, this.progress);
+                
+                noStroke();
+                // 粒子发光效果
+                for(let i=0; i<3; i++) {
+                    fill(0, 242, 255, 100 - i*30);
+                    circle(x, y, 8 + i*4);
+                }
+                fill(255, 255, 255);
+                circle(x, y, 4);
+            }
+        }
+
+        function draw() {
+            clear();
+            
+            // 绘制科技感背景网格
+            drawGrid();
+
+            // 坐标变换到中心
+            translate(width / 2, height / 2);
+            
+            // 应用视图变换 (缩放和旋转)
+            scale(state.zoom);
+            rotate(state.rotation);
+            
+            // 计算物理量
+            const iRad = radians(state.angle);
+            let rRad = Math.asin(Math.sin(iRad) / state.n);
+            if (isNaN(rRad)) rRad = 0;
+            const rDeg = degrees(rRad);
+            
+            // 更新UI数值
+            els.valIncidence.innerText = state.angle.toFixed(1) + '°';
+            els.valRefraction.innerText = rDeg.toFixed(1) + '°';
+            els.valN.innerText = state.n.toFixed(2);
+            const shift = state.glassHeight * Math.sin(iRad - rRad) / Math.cos(rRad);
+            els.valShift.innerText = shift.toFixed(1);
+
+            // 关键点坐标
+            const glassTopY = -state.glassHeight / 2;
+            const glassBottomY = state.glassHeight / 2;
+            const pIncident = createVector(0, glassTopY);
+            const lightLen = 400;
+            const pSource = createVector(
+                pIncident.x - lightLen * sin(iRad),
+                pIncident.y - lightLen * cos(iRad)
+            );
+            const dx = state.glassHeight * Math.tan(rRad);
+            const pExit = createVector(dx, glassBottomY);
+            const pFinal = createVector(
+                pExit.x + lightLen * sin(iRad),
+                pExit.y + lightLen * cos(iRad)
+            );
+
+            // --- 绘图层 ---
+            drawGlass(glassTopY, glassBottomY);
+
+            if (state.showNormal) {
+                drawNormals(pIncident, pExit);
+            }
+
+            drawLightRays(pSource, pIncident, pExit, pFinal);
+
+            if (state.showExtend) {
+                drawExtensions(pSource, pIncident, pExit);
+            }
+
+            if (state.showValues) {
+                drawAngles(pIncident, pExit, iRad, rRad);
+            }
+
+            if (state.showParticles) {
+                handleParticles([pSource, pIncident, pExit, pFinal]);
+            }
+        }
+
+        function drawGrid() {
+            push();
+            stroke(255, 255, 255, 10);
+            strokeWeight(1);
+            const step = 50;
+            const offsetX = (frameCount * 0.5) % step;
+            const offsetY = (frameCount * 0.5) % step;
+            
+            for (let x = 0; x < width; x += step) line(x, 0, x, height);
+            for (let y = 0; y < height; y += step) line(0, y, width, y);
+            pop();
+        }
+
+        function drawGlass(topY, bottomY) {
+            push();
+            // 玻璃主体
+            fill(0, 242, 255, 30);
+            stroke(0, 242, 255, 150);
+            strokeWeight(2);
+            rectMode(CENTER);
+            rect(0, 0, state.glassWidth, state.glassHeight);
+            
+            // 玻璃高光装饰
+            noStroke();
+            fill(255, 255, 255, 20);
+            rect(0, -state.glassHeight/4, state.glassWidth, 2);
+            
+            // 标注介质
+            fill(0, 242, 255);
+            textAlign(LEFT, TOP);
+            textSize(14);
+            text(`玻璃 (n=${state.n.toFixed(2)})`, -state.glassWidth/2 + 10, topY + 10);
+            fill(150, 150, 150);
+            text("空气 (n=1.00)", -state.glassWidth/2 + 10, topY - 30);
+            pop();
+        }
+
+        function drawNormals(p1, p2) {
+            push();
+            stroke(255, 255, 255, 100);
+            strokeWeight(1);
+            drawingContext.setLineDash([5, 5]);
+            line(0, p1.y - 100, 0, p1.y + 100);
+            line(p2.x, p2.y - 100, p2.x, p2.y + 100);
+            drawingContext.setLineDash([]);
+            pop();
+        }
+
+        function drawLightRays(pSource, pIncident, pExit, pFinal) {
+            push();
+            stroke(0, 242, 255);
+            strokeWeight(3);
+            // 外发光
+            drawingContext.shadowBlur = 15;
+            drawingContext.shadowColor = '#00f2ff';
+            
+            line(pSource.x, pSource.y, pIncident.x, pIncident.y);
+            drawArrow(pSource, pIncident, 0.5);
+            
+            stroke(0, 242, 255, 180);
+            line(pIncident.x, pIncident.y, pExit.x, pExit.y);
+            drawArrow(pIncident, pExit, 0.5);
+            
+            stroke(0, 242, 255);
+            line(pExit.x, pExit.y, pFinal.x, pFinal.y);
+            drawArrow(pExit, pFinal, 0.5);
+            
+            drawingContext.shadowBlur = 0;
+            pop();
+        }
+
+        function drawExtensions(pSource, pIncident, pExit) {
+            push();
+            stroke(255, 0, 85, 100);
+            strokeWeight(1);
+            drawingContext.setLineDash([8, 4]);
+            let dir = p5.Vector.sub(pIncident, pSource).normalize().mult(600);
+            let pFar = p5.Vector.add(pIncident, dir);
+            line(pIncident.x, pIncident.y, pFar.x, pFar.y);
+            pop();
+        }
+
+        function drawArrow(p1, p2, ratio) {
+            let v = p5.Vector.sub(p2, p1);
+            let pos = p5.Vector.add(p1, p5.Vector.mult(v, ratio));
+            let angle = v.heading();
+            push();
+            translate(pos.x, pos.y);
+            rotate(angle);
+            fill(0, 242, 255);
+            noStroke();
+            triangle(-8, -5, 8, 0, -8, 5);
+            pop();
+        }
+
+        function drawAngles(pIncident, pExit, iRad, rRad) {
+            push();
+            noFill();
+            strokeWeight(2);
+            textSize(14);
+            textAlign(CENTER, CENTER);
+            
+            // --- 1. 入射点 (上表面) ---
+            
+            // 入射角 i (空气中)
+            // 法线: 向上 (-PI/2)
+            // 光线来源: 左上 (-PI/2 - i)
+            stroke(0, 242, 255); 
+            arc(pIncident.x, pIncident.y, 50, 50, -PI/2 - iRad, -PI/2);
+            
+            noStroke();
+            fill(0, 242, 255);
+            // 文字位置: 角平分线方向
+            let txtPosI = p5.Vector.fromAngle(-PI/2 - iRad/2).mult(40).add(pIncident);
+            text("i", txtPosI.x, txtPosI.y);
+
+            // 折射角 r (玻璃中)
+            // 法线: 向下 (PI/2)
+            // 折射光线: 右下 (PI/2 - r)
+            // 修正：光线在法线右侧，应逆时针画
+            noFill();
+            stroke(255, 0, 85);
+            arc(pIncident.x, pIncident.y, 50, 50, PI/2 - rRad, PI/2);
+            
+            noStroke();
+            fill(255, 0, 85);
+            let txtPosR = p5.Vector.fromAngle(PI/2 - rRad/2).mult(40).add(pIncident);
+            text("r", txtPosR.x, txtPosR.y);
+
+            // --- 2. 出射点 (下表面) ---
+
+            // 内部入射角 r' (玻璃中)
+            // 法线: 向上 (-PI/2)
+            // 光线来源: 左上 (-PI/2 - r)
+            noFill();
+            stroke(255, 0, 85);
+            arc(pExit.x, pExit.y, 50, 50, -PI/2 - rRad, -PI/2);
+            
+            noStroke();
+            fill(255, 0, 85);
+            let txtPosR2 = p5.Vector.fromAngle(-PI/2 - rRad/2).mult(40).add(pExit);
+            text("r'", txtPosR2.x, txtPosR2.y);
+            
+            // 出射角 i' (空气中)
+            // 法线: 向下 (PI/2)
+            // 出射光线: 右下 (PI/2 - i)
+            // 修正：光线在法线右侧，应逆时针画
+            noFill();
+            stroke(0, 242, 255);
+            arc(pExit.x, pExit.y, 50, 50, PI/2 - iRad, PI/2);
+            
+            noStroke();
+            fill(0, 242, 255);
+            let txtPosI2 = p5.Vector.fromAngle(PI/2 - iRad/2).mult(40).add(pExit);
+            text("i'", txtPosI2.x, txtPosI2.y);
+            
+            pop();
+        }
+
+        function handleParticles(path) {
+            if (frameCount % 15 === 0) {
+                particles.push(new Photon(path));
+            }
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].path = path;
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].finished) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        function mouseDragged() {
+            // 右键拖拽旋转视图
+            if (mouseButton === RIGHT) {
+                state.rotation += (mouseX - pmouseX) * 0.01;
+                return;
+            }
+
+            // 左键拖拽调节入射角
+            if (mouseY < height - 200) { // 避开底部UI
+                // 计算鼠标相对于中心的向量
+                let dx = mouseX - width/2;
+                let dy = mouseY - height/2;
+                
+                // 逆变换：先逆旋转，再逆缩放
+                let v = createVector(dx, dy);
+                v.rotate(-state.rotation);
+                v.div(state.zoom);
+                
+                // 修正后的坐标
+                let localX = v.x;
+                let localY = v.y + state.glassHeight/2; // 加上偏移量以相对于入射点
+
+                if (localY < 0) {
+                    let angle = degrees(atan2(localX, localY));
+                    let newAngle = -angle;
+                    if (newAngle >= 0 && newAngle <= 85) {
+                        state.angle = newAngle;
+                        els.sliderAngle.value = newAngle;
+                    }
+                }
+            }
+        }
+        
+        // 鼠标释放时也触发语音（如果是通过拖拽画面改变的角度）
+        function mouseReleased() {
+             if (mouseY < height - 200) {
+                 playAudio(audioAngle);
+             }
+        }
+    </script>
+</body>
+</html>

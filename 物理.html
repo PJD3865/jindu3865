@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="img-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com; media-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com;">
+<base href="https://musk-online.fbcontent.cn/pub-musk-ai-studio/directories/circuit-lab/v31-20260911-portable/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>中学电路实验台｜23组件</title>
+  <style>
+    :root{color-scheme:dark;--graphite:#22272e;--slate:#343b45;--enamel:#eef1f4;--terminal-red:#df3f36;--probe-blue:#54a8f5;--filament:#ffc35a;--ink:#e9edf2;--muted:#8e9aa8;--line:#4b5663;--panel:#272d35f0}*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:var(--graphite);color:var(--ink);font:14px/1.45 "Segoe UI","Microsoft YaHei",sans-serif;user-select:none}button,input{font:inherit;color:inherit}.app{height:100%;display:grid;grid-template-rows:64px 1fr 38px}.topbar{z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 18px;background:#20252b;border-bottom:1px solid #11161b;box-shadow:0 4px 18px #1119}.tools,.top-actions{display:flex;gap:5px;align-items:center}.top-actions{justify-content:flex-end}.tool{height:38px;padding:0 12px;border:1px solid transparent;border-radius:6px;background:transparent;color:#b2bdc9;cursor:pointer}.tool:hover,.tool.active{border-color:#566778;background:#313a44;color:white}.heading{text-align:center}.heading strong{display:block;font:600 18px/1.1 Bahnschrift,"Segoe UI",sans-serif;letter-spacing:.08em}.heading span{display:block;margin-top:4px;color:#82909f;font:10px/1 Consolas,monospace;letter-spacing:.15em}.mode{padding:5px 10px;border:1px solid #3d759d;border-radius:999px;background:#2f638033;color:#9fd7ff;font:11px Consolas,monospace}.layout{min-height:0;display:grid;grid-template-columns:minmax(740px,1fr) 292px}.stage{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#434b56 0,#363d46 55%,#2d333b 100%)}.stage::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,#0008,transparent 88%)}.bench{position:absolute;left:3%;right:3%;bottom:98px;height:2px;z-index:1;background:linear-gradient(90deg,transparent,#697582 12%,#697582 88%,transparent);box-shadow:0 22px 32px #12171dc7}.wire-hint{position:absolute;top:14px;left:50%;z-index:45;transform:translateX(-50%);padding:8px 14px;border:1px solid #596674;border-radius:7px;background:#252b32e8;color:#b8c4cf;font-size:12px;box-shadow:0 9px 22px #1117}.is-wiring .wire-hint{border-color:#54a8f5;color:#d8efff;box-shadow:0 0 0 3px #54a8f522}.wire-layer{position:absolute;inset:0;z-index:18;width:100%;height:100%;overflow:visible}.wire-shadow,.wire-visible,.wire-hit{fill:none;stroke-linecap:round}.wire-shadow{stroke:#111b;stroke-width:4.5}.wire-visible{stroke-width:2.5}.wire-hit{stroke:transparent;stroke-width:18;pointer-events:stroke;cursor:pointer}.event-panel,.inspector{position:absolute;z-index:38;bottom:106px;border:1px solid var(--line);border-radius:9px;background:var(--panel);box-shadow:0 14px 32px #1119;backdrop-filter:blur(12px)}.event-panel{left:15px;width:280px;padding:11px 13px}.event-title{display:flex;justify-content:space-between;margin-bottom:7px;color:#aeb9c5;font:11px Consolas,monospace;letter-spacing:.08em}.event-title span:last-child{color:#65b7fb}.event-log{min-height:67px;display:grid;align-content:end;gap:3px;color:#95a2af;font-size:10px}.event-log div:first-child{color:#dde9f3}.event-log [data-tone=good]{color:#74d6a5}.event-log [data-tone=bad]{color:#ff8b83}.inspector{right:15px;width:248px;padding:12px}.inspector h3{margin:0 0 8px;font:600 14px Bahnschrift,"Segoe UI",sans-serif;letter-spacing:.04em}.capabilities{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px}.capabilities span{padding:2px 6px;border:1px solid #3d5c76;border-radius:4px;background:#31516a44;color:#a7d7ff;font:9px Consolas,monospace}.state-list{display:grid;gap:3px;max-height:160px;overflow:auto}.state-list div{display:flex;justify-content:space-between;gap:10px;color:#93a0ae;font-size:10px}.state-list b{color:#dce3ea;font:500 10px Consolas,monospace}.lab-component{position:absolute;z-index:8;cursor:grab;touch-action:none;filter:drop-shadow(0 11px 9px #101419a8)}.lab-component.dragging{z-index:42;cursor:grabbing;filter:drop-shadow(0 15px 11px #101419d8) drop-shadow(0 0 8px #54a8f5)}.lab-component.selected:not(.dragging){filter:drop-shadow(0 11px 9px #101419b8) drop-shadow(0 0 4px #54a8f588)}.component-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}.component-name{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);padding:2px 7px;border-radius:4px;background:#21272dcc;color:#dbe3eb;font:11px Bahnschrift,"Segoe UI",sans-serif;white-space:nowrap;letter-spacing:.04em}.electrical-port{position:absolute;z-index:24;width:19px;height:19px;padding:0;transform:translate(-50%,-50%);border:2px solid #dbe5ee;border-radius:50%;background:#54a8f533;box-shadow:0 0 0 2px #182029aa,0 0 8px #54a8f588;cursor:crosshair;opacity:.5;transition:opacity .15s,transform .15s,box-shadow .15s}.electrical-port:hover,.electrical-port.pending{opacity:1;transform:translate(-50%,-50%) scale(1.25)}.electrical-port.pending{box-shadow:0 0 0 4px #54a8f544,0 0 18px #54a8f5}.electrical-port.connected{opacity:.85}.port-positive{border-color:#ff6f66;background:#df3f3666}.port-negative,.port-common{border-color:#8997a6;background:#20252bcc}.show-ports .electrical-port{opacity:1}.meter-readout{position:absolute;top:-7px;left:50%;transform:translateX(-50%);padding:3px 7px;border-radius:4px;background:#20252be8;color:#f5f7f9;font:600 12px Consolas,monospace;white-space:nowrap}.meter-needle{position:absolute;z-index:9;left:50%;top:55%;width:2px;height:38%;transform-origin:50% 100%;background:#ff332b;box-shadow:0 0 3px #ff6f66;pointer-events:none;transition:transform .12s ease}.component-ammeter .meter-needle{top:54%;height:36%}.is-overload .meter-readout{color:#ff8b83}.lamp-glow{position:absolute;z-index:-1;left:50%;top:25%;width:98px;height:98px;transform:translate(-50%,-50%) scale(calc(.35 + var(--brightness)));border-radius:50%;background:radial-gradient(circle,#fff7ccee 0,#ffc35a99 30%,#ff9d2744 56%,transparent 72%);opacity:var(--brightness);filter:blur(8px);transition:opacity .14s,transform .14s}.component-lamp.is-lit .component-image{filter:drop-shadow(0 0 calc(7px + 12px * var(--brightness)) #ffc35a)}.switch-hit{position:absolute;z-index:25;left:27%;top:7%;width:58%;height:55%;padding:0;border:0;background:transparent;cursor:pointer}.switch-hit span{position:absolute;left:9%;bottom:11%;width:70%;height:7px;transform:rotate(-33deg);transform-origin:0 50%;border-radius:4px;background:linear-gradient(#f7f8f8,#8d969e);box-shadow:0 1px 3px #111;transition:transform .18s ease}.component-knifeSwitch.is-closed .switch-hit span{transform:rotate(0deg)}.rheostat-range{position:absolute;z-index:25;left:25%;top:13%;width:50%;height:28%;margin:0;accent-color:#f2f4f6;cursor:ew-resize;opacity:.78}.side{display:grid;grid-template-columns:50px 1fr;min-height:0;border-left:1px solid #1b2026;background:#282f37}.categories{padding:10px 5px;border-right:1px solid #3c4651;background:#232930}.category{display:grid;place-items:center;width:40px;min-height:56px;border-radius:6px;background:#2e6282;color:#d8f0ff;font-size:9px;text-align:center}.category b{font:20px Consolas,monospace}.shelf{min-height:0;overflow:auto;padding:11px}.shelf-head{margin:4px 0 9px;color:#aab5c0;font:11px Consolas,monospace;letter-spacing:.08em}.items{display:grid;grid-template-columns:1fr 1fr;gap:7px}.shelf-item{min-height:103px;padding:7px 4px;border:1px solid #3d4854;border-radius:7px;background:#303842;color:#b9c4ce;font-size:10px;text-align:center;cursor:pointer}.shelf-item:hover{border-color:#5eaef1;background:#35414d}.mini{display:grid;place-items:center;height:72px}.mini img{max-width:92px;max-height:68px;object-fit:contain;filter:drop-shadow(0 5px 4px #1118)}.meter-mini{position:relative;--meter-mini-scale:1}.meter-mini-ammeter{--meter-mini-scale:.792}.meter-mini .meter-mini-layer{position:absolute;left:50%;top:50%;width:78.2px;height:72px;max-width:none;max-height:none;transform:translate(-50%,-50%) scale(var(--meter-mini-scale));object-fit:contain}.meter-mini .meter-mini-needle{clip-path:polygon(22.5% 27.7%,24.8% 28%,47.5% 55%,46.1% 56.6%,22.8% 30.7%);filter:none}.footer{display:flex;align-items:center;justify-content:center;border-top:1px solid #161b20;background:#21262c;color:#919da9;font-size:11px}.footer b{margin-right:8px;color:#ffc35a}@media(max-width:980px){.layout{grid-template-columns:1fr}.side{display:none}.event-panel{display:none}.inspector{right:9px;bottom:94px;width:218px}.wire-hint{width:calc(100% - 24px);text-align:center}.tools .label{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+    .wire-layer{z-index:21;pointer-events:none}.wire-hit{pointer-events:stroke}.wire-guide-preview{fill:none;stroke:#7fc9ff;stroke-width:1.5;stroke-dasharray:5 7;stroke-linecap:round;opacity:.8}.wire-guide-point{fill:#7fc9ff;stroke:#e8f7ff;stroke-width:1.5;filter:drop-shadow(0 0 4px #54a8f5)}.lab-component{z-index:20}.electrical-port.multi-connected::after{content:attr(data-connection-count);position:absolute;right:-9px;top:-9px;display:none;place-items:center;min-width:15px;height:15px;padding:0 3px;border:1px solid #d9efff;border-radius:999px;background:#247fbd;color:white;font:700 9px/1 Consolas,monospace;box-shadow:0 1px 5px #111b}
+    /* The real binding-post artwork remains visible; this button is only an invisible hit target. */
+    .electrical-port,.electrical-port:hover,.electrical-port.pending,.electrical-port.connected,.show-ports .electrical-port{border-color:transparent!important;background:transparent!important;box-shadow:none!important;opacity:1;transform:translate(-50%,-50%)}.electrical-port::after{display:none!important}#portsBtn{display:none}
+    .component-visual-part{position:absolute;z-index:3;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none;transition-property:transform;transition-timing-function:ease}
+    .component-visual-label{position:absolute;z-index:4;display:grid;place-items:center;color:#55585b;font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-weight:500;line-height:1;white-space:nowrap;pointer-events:none}
+    .component-rheostat .rheostat-range{opacity:0}
+    .is-reversed .meter-readout{color:#ff8b83;box-shadow:0 0 0 1px #ff5b50,0 0 12px #ff5b5066}
+    .component-parameters{position:absolute;z-index:31;top:calc(100% + 22px);left:50%;display:flex;flex-wrap:nowrap;justify-content:center;gap:3px 5px;width:max-content;max-width:calc(100% + 200px);transform:translateX(-50%);padding:5px 6px;border:1px solid #53606d;border-radius:6px;background:#20262df5;box-shadow:0 5px 12px #1118;color:#b8c4cf;font:9px/1.2 "Segoe UI","Microsoft YaHei",sans-serif;filter:none}
+    .component-parameters label{display:grid;grid-template-columns:auto 56px auto;align-items:center;gap:3px;white-space:nowrap}.component-parameters input{width:56px;height:19px;padding:1px 3px;border:1px solid #586675;border-radius:3px;outline:0;background:#151a20;color:#f0f4f7;font:9px Consolas,monospace;user-select:text}.component-parameters input:focus{border-color:#54a8f5;box-shadow:0 0 0 2px #54a8f533}.component-parameters small{color:#82909f;font-size:8px}
+    .component-parameters .parameter-output{grid-template-columns:auto auto auto}.parameter-output output{min-width:24px;color:#f0f4f7;font:9px Consolas,monospace}.component-ammeter .component-parameters,.component-rheostat .component-parameters{left:0;transform:none}
+    .physics-symbol{font-family:"Times New Roman",Times,serif;font-style:italic;font-weight:400;letter-spacing:0}.physics-unit{font-family:"Times New Roman",Times,serif!important;font-style:normal!important;font-weight:400;letter-spacing:0}.meter-readout{font-family:"Times New Roman",Times,serif;font-style:normal}.state-list b{font-family:"Times New Roman",Times,serif;font-style:normal}
+    .lamp-glow{z-index:6;overflow:hidden;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 46% 40%,#fffef4 0 18%,#fff2a8 31%,#ffc34f 52%,#f28a2433 73%,transparent 76%);opacity:var(--lamp-glow-opacity,0);filter:none;mix-blend-mode:screen;box-shadow:inset 0 0 7px #fff4b899;pointer-events:none;transition:opacity .16s ease}.lamp-glow::after{content:"";position:absolute;left:35%;top:35%;width:30%;height:38%;border-radius:50%;background:#fffdf0;opacity:var(--lamp-core-opacity,0);filter:blur(.7px)}.component-lamp.is-lit .component-image{filter:none}
+    .component-parameters .parameter-range{grid-template-columns:auto 92px 24px auto}.component-parameters input[type="range"]{width:92px;height:18px;padding:0;border:0;background:transparent;accent-color:var(--terminal-red);cursor:ew-resize;box-shadow:none}.component-parameters input[type="range"]:focus-visible{outline:2px solid #54a8f5;outline-offset:2px;box-shadow:none}.parameter-range-value{min-width:24px;color:#f0f4f7;font:9px "Times New Roman",Times,serif;text-align:right}
+    .parameter-visibility-toggle{position:absolute;z-index:32;top:calc(100% + 3px);right:-4px;height:17px;padding:0 5px;border:1px solid #53606d;border-radius:4px;background:#20262df5;color:#aebac6;font:9px/1 "Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer}.parameter-visibility-toggle:hover,.parameter-visibility-toggle:focus-visible{border-color:#54a8f5;color:#fff;outline:none}.parameters-hidden .component-parameters{display:none!important}
+    .component-parameters .parameter-steps{grid-template-columns:auto auto auto}.parameter-step-choices{display:inline-grid;grid-template-columns:repeat(4,27px);overflow:hidden;border:1px solid #586675;border-radius:4px;background:#151a20}.parameter-step{height:18px;padding:0;border:0;border-right:1px solid #3e4954;background:transparent;color:#9ca8b5;font:9px/1 "Times New Roman",Times,serif;cursor:pointer}.parameter-step:last-child{border-right:0}.parameter-step:hover{background:#36424d;color:#fff}.parameter-step.active{background:var(--terminal-red);color:#fff;box-shadow:inset 0 0 0 1px #ff8a82}.parameter-step:focus-visible{position:relative;z-index:1;outline:2px solid #54a8f5;outline-offset:-2px}
+    .component-sprite,.sprite-thumb{background-repeat:no-repeat;background-color:transparent}.component-sprite{background-origin:border-box;background-clip:border-box}.sprite-thumb{display:block;width:76px;height:76px;margin:auto}.shelf-label{display:block;min-height:30px;line-height:1.35}.shelf-item-extended{min-height:112px}
+    .component-resize-handle{position:absolute;right:-8px;bottom:-8px;z-index:35;display:none;width:18px;height:18px;padding:0;border:1px solid #b9def8;border-radius:50%;background:#276f9f;color:#fff;box-shadow:0 2px 7px #111b;cursor:nwse-resize;touch-action:none}.component-resize-handle::before{content:"";position:absolute;inset:4px;border-right:2px solid currentColor;border-bottom:2px solid currentColor}.lab-component.selected .component-resize-handle,.lab-component.resizing .component-resize-handle{display:block}.lab-component.resizing{z-index:43;cursor:nwse-resize;filter:drop-shadow(0 15px 11px #101419d8) drop-shadow(0 0 8px #54a8f5)}
+    .component-voltmeter .component-parameters,.component-ammeter .component-parameters,.component-rheostat .component-parameters,.component-lamp .component-parameters,.component-batteryPack .component-parameters{display:grid;grid-template-rows:repeat(2,19px);grid-auto-flow:column;align-items:center;gap:3px 7px}
+    .switch-hit:focus:not(:focus-visible){outline:none}.switch-hit:focus-visible{outline:2px solid #54a8f5;outline-offset:2px;border-radius:5px}
+    .component-lamp .lamp-glow{z-index:2;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#fffdefff 0,#fff3b8e8 25%,#ffc24fb3 52%,#ff9d274d 76%,transparent 100%);opacity:min(1,var(--brightness));overflow:hidden;pointer-events:none;mix-blend-mode:screen;filter:saturate(calc(.55 + var(--brightness) * .9)) brightness(calc(.45 + var(--brightness) * .9));transition:opacity .22s,filter .22s}.component-lamp.is-lit .component-image{filter:none}
+    .bench,.event-panel,.inspector{display:none!important}
+    .experiment-home{position:absolute;inset:0;z-index:46;overflow:auto;padding:34px 38px 56px;background:linear-gradient(135deg,#202830f2,#303943f8 58%,#242b33f5);scrollbar-color:#596877 transparent}.experiment-home[hidden]{display:none}.catalog-head{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:end;max-width:1040px;margin:0 auto 24px}.catalog-index{color:#ffc35a;font:700 54px/.82 Bahnschrift,"Arial Narrow",sans-serif;letter-spacing:-.05em}.catalog-head h1{margin:0;font:650 27px/1.1 Bahnschrift,"Microsoft YaHei",sans-serif;letter-spacing:.03em}.catalog-head p{margin:7px 0 0;color:#a9b4c0;font-size:12px}.experiment-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;max-width:1040px;margin:auto}.experiment-card{position:relative;min-height:142px;padding:16px 15px 14px;border:1px solid #475563;border-radius:9px;overflow:hidden;background:#28313ae8;color:#edf2f6;text-align:left;cursor:pointer;box-shadow:0 8px 18px #1115;transition:transform .16s,border-color .16s,background .16s}.experiment-card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--card-accent,#54a8f5)}.experiment-card:hover,.experiment-card:focus-visible{transform:translateY(-2px);border-color:var(--card-accent,#54a8f5);background:#303b46;outline:none}.experiment-card-free{grid-column:span 3;min-height:126px;padding:20px 22px;background:linear-gradient(105deg,#243744,#29343d 62%,#2b3239)}.experiment-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px}.experiment-chapter{color:var(--card-accent,#8bcaff);font:700 12px/1 Consolas,monospace;letter-spacing:.08em}.experiment-kind{padding:3px 7px;border:1px solid #ffffff25;border-radius:999px;color:#bdc8d2;font-size:9px}.experiment-card h2{margin:0 0 7px;font:600 16px/1.2 Bahnschrift,"Microsoft YaHei",sans-serif}.experiment-card p{margin:0;color:#9eabb7;font-size:11px;line-height:1.55}.experiment-focus{display:block;margin-top:12px;color:#d9e1e8;font:10px Consolas,monospace}.experiment-card-free h2{font-size:21px}.experiment-card-free p{max-width:620px}.lab-toolbar{position:absolute;top:12px;right:14px;z-index:44;display:flex;align-items:center;gap:4px;padding:4px;border:1px solid #526170;border-radius:8px;background:#20272ee8;box-shadow:0 8px 18px #1118;backdrop-filter:blur(10px)}.lab-toolbar[hidden]{display:none}.lab-tool{height:29px;padding:0 9px;border:1px solid transparent;border-radius:5px;background:transparent;color:#b8c4cf;font-size:10px;cursor:pointer}.lab-tool:hover,.lab-tool.active,.lab-tool:focus-visible{border-color:#5c7890;background:#344450;color:#fff;outline:none}.lab-tool.icon{min-width:29px;padding:0;font:700 15px Consolas,monospace}.zoom-value{min-width:43px;color:#90a0af;font:10px Consolas,monospace;text-align:center}.schematic-panel{position:absolute;left:14px;top:14px;z-index:43;width:230px;border:1px solid #536271;border-radius:9px;background:#20272ef0;box-shadow:0 10px 24px #1119;backdrop-filter:blur(10px)}.schematic-panel[hidden],.schematic-panel.collapsed .schematic-body{display:none}.schematic-head{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 8px 0 11px;color:#cdd6de;font:11px Bahnschrift,"Microsoft YaHei",sans-serif}.schematic-toggle{width:24px;height:24px;border:0;border-radius:4px;background:transparent;color:#99a7b4;cursor:pointer}.schematic-toggle:hover{background:#34414c;color:white}.schematic-body{height:118px;margin:0 8px 8px;border-radius:5px;background:#f0eee8;color:#27313a}.schematic-body svg{display:block;width:100%;height:100%}.schematic-wire{fill:none;stroke:#28323b;stroke-width:2}.schematic-symbol{fill:#f0eee8;stroke:#28323b;stroke-width:2}.schematic-label{fill:#28323b;font:italic 11px "Times New Roman",serif}.show-current-direction .wire-visible{stroke-dasharray:10 7;animation:current-flow .8s linear infinite}.parameters-collapsed .component-parameters,.parameters-collapsed .parameter-visibility-toggle{display:none!important}@keyframes current-flow{to{stroke-dashoffset:-17px}}.circuit-check-toast{position:absolute;left:50%;bottom:28px;z-index:48;transform:translateX(-50%);padding:9px 14px;border:1px solid #5c6b78;border-radius:7px;background:#20272ff2;color:#dce6ee;font-size:11px;box-shadow:0 8px 20px #1119}.circuit-check-toast.good{border-color:#4f9a75;color:#9ce2ba}.circuit-check-toast.bad{border-color:#b95b54;color:#ffaaa4}@media(max-width:1100px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.experiment-card-free{grid-column:span 2}.experiment-home{padding:26px 24px 48px}.lab-toolbar{right:8px}.lab-tool:not(.icon){padding:0 6px}}@media(max-width:720px){.experiment-grid{grid-template-columns:1fr}.experiment-card-free{grid-column:span 1}.catalog-index{font-size:42px}.catalog-head{grid-template-columns:auto 1fr}.schematic-panel{width:190px}.lab-toolbar{top:auto;bottom:10px;left:10px;right:auto}.lab-tool{font-size:9px}}
+    .show-current-direction .flow-reverse .wire-visible{animation-direction:reverse}.show-current-direction .flow-unpowered .wire-visible{animation:none;stroke-dasharray:none}.wire-hint{top:auto;bottom:12px;max-width:calc(100% - 48px);text-align:center}.circuit-check-toast{bottom:58px}
+  </style>
+  <style>
+    .schematic-note{fill:#34414b;font:9px "Microsoft YaHei",sans-serif}.side{display:grid;grid-template-columns:58px 1fr}.categories{display:flex;flex-direction:column;gap:7px;padding:10px 6px;background:#232930}.visual-style{display:grid;place-items:center;width:46px;min-height:62px;padding:5px 2px;border:1px solid #44515d;border-radius:7px;background:#29313a;color:#9facb8;font:9px/1.25 "Microsoft YaHei",sans-serif;cursor:pointer}.visual-style b{font:20px/1 KaiTi,"Microsoft YaHei",sans-serif}.visual-style:hover,.visual-style:focus-visible{border-color:#70b7e7;color:#e8f4fc;outline:none}.visual-style.active{border-color:#4f9dcc;background:#2d698b;color:#fff;box-shadow:inset 0 0 0 1px #8dd3ff33}.experiment-card{min-height:96px;padding:15px 16px}.experiment-card-top{justify-content:flex-start;margin-bottom:13px}.experiment-card h2{margin:0;font-size:17px}.experiment-card-free{min-height:96px;padding:15px 19px}.experiment-card-free h2{font-size:21px}
+    .handdrawn-visual,.handdrawn-thumb{display:none}.handdrawn-visual{position:absolute;inset:0;z-index:7;width:100%;height:100%;pointer-events:none}.handdrawn-thumb{width:100%;height:72px}.chalk-body{fill:#173d33;stroke:#f3ead2;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chalk-detail{fill:none;stroke:#f3ead2;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.chalk-soft{fill:none;stroke:#d8cfb8;stroke-width:1.2;stroke-dasharray:2 2}.chalk-red{fill:#d94b43;stroke:#ffd7ca;stroke-width:1.4}.chalk-black{fill:#17211d;stroke:#e6dfc9;stroke-width:1.4}.chalk-amber{fill:#d9a947;stroke:#ffe5a8;stroke-width:1.4}.chalk-text{fill:#f3ead2;font:600 13px KaiTi,"Microsoft YaHei",sans-serif;text-anchor:middle}.chalk-small{fill:#f3ead2;font:10px "Times New Roman",serif;text-anchor:middle}.lab-component{transform:var(--view-transform,translate(0,0) scale(1))}.style-handdrawn .stage{background:radial-gradient(ellipse at 48% 40%,#315a4d 0,#24483e 56%,#17352f 100%)}.style-handdrawn .stage::after{background-image:linear-gradient(#edf4df0a 1px,transparent 1px),linear-gradient(90deg,#edf4df0a 1px,transparent 1px);background-size:38px 38px;opacity:.72}.style-handdrawn .component-image,.style-handdrawn .component-visual-part,.style-handdrawn .component-sprite,.style-handdrawn .sprite-thumb,.style-handdrawn .mini img{opacity:0!important;filter:none!important}.style-handdrawn .handdrawn-visual,.style-handdrawn .handdrawn-thumb{display:block}.style-handdrawn .electrical-port{opacity:0}.style-handdrawn .electrical-port:hover,.style-handdrawn .electrical-port.pending{opacity:.28}.style-handdrawn .wire-visible{stroke:#f2ead4!important;filter:drop-shadow(0 0 1px #fff8)}.style-handdrawn .wire-shadow{stroke:#101d18aa;stroke-width:5}.style-handdrawn .component-name,.style-handdrawn .component-parameters,.style-handdrawn .parameter-visibility-toggle{font-family:KaiTi,"Microsoft YaHei",sans-serif;background:#183a32e8;border-color:#879c91;color:#f2eedc}.style-handdrawn .shelf{background:#20372f}.style-handdrawn .shelf-item{background:#29463c;border-color:#526b61;color:#eee9d7}.style-handdrawn .schematic-body{background:#173d33}.style-handdrawn .schematic-wire,.style-handdrawn .schematic-symbol{stroke:#f2ead4}.style-handdrawn .schematic-symbol{fill:#173d33}.style-handdrawn .schematic-label,.style-handdrawn .schematic-note{fill:#f2ead4}.style-handdrawn .visual-style[data-visual-style="handdrawn"]{border-style:dashed}.style-3d .stage{background:linear-gradient(145deg,#c69661 0,#8e765d 18%,#31565a 38%,#123f43 100%)}.style-3d .stage::after{inset:-42% -28% -15%;background-image:linear-gradient(#8ac3c733 1px,transparent 1px),linear-gradient(90deg,#8ac3c733 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,#0003,#000 82%);opacity:.75;transform:perspective(520px) rotateX(57deg) scale(1.3);transform-origin:50% 82%}.style-3d .lab-component{transform:var(--view-transform,translate(0,0) scale(1)) perspective(720px) rotateX(13deg) rotateY(-8deg) translateZ(18px);transform-origin:50% 72%!important;transform-style:preserve-3d;filter:drop-shadow(13px 20px 9px #081315bb) drop-shadow(-2px -2px 1px #ffffff35)}.style-3d .component-voltmeter,.style-3d .component-ammeter{transform:var(--view-transform,translate(0,0) scale(1)) perspective(720px) rotateX(2deg) rotateY(-10deg) translateZ(24px);transform-origin:50% 88%!important}.style-3d .lab-component.dragging{transform:var(--view-transform,translate(0,0) scale(1)) perspective(720px) rotateX(10deg) rotateY(-7deg) translateZ(46px) scale(1.035)}.style-3d .lab-component::before{content:"";position:absolute;left:5%;right:-8%;bottom:-9%;height:23%;z-index:-2;border-radius:50%;background:#07121599;filter:blur(7px);transform:translateZ(-30px) skewX(-24deg)}.style-3d .component-image,.style-3d .component-sprite{transform:none;filter:contrast(1.12) saturate(1.16) brightness(1.04) drop-shadow(4px 6px 2px #0b121777)}.style-3d .wire-shadow{stroke:#091315cc;stroke-width:9;transform:translate(6px,9px);filter:blur(1.4px)}.style-3d .wire-visible{stroke-width:5.2;filter:drop-shadow(-1px -1px 0 #ffaaa0) drop-shadow(1px 2px 1px #641d19)}.style-3d .shelf-item .mini{transform:perspective(420px) rotateX(12deg) rotateY(-9deg) translateZ(8px);filter:drop-shadow(9px 12px 5px #10151bcc)}.style-3d .shelf-item{background:linear-gradient(145deg,#465562,#26313a);border-color:#647482;box-shadow:inset 2px 2px #ffffff16,inset -3px -4px #0b111866,5px 7px 10px #1118}.style-3d .component-name{box-shadow:0 7px 13px #111a}.style-3d .visual-style[data-visual-style="3d"]{background:linear-gradient(145deg,#4297bf,#174962)}
+  </style>
+  <style>.lab-tool:disabled{opacity:.38;cursor:not-allowed;pointer-events:none}.shelf-nav{position:sticky;top:-11px;z-index:12;margin:-11px -11px 10px;padding:11px 11px 10px;background:linear-gradient(#282f37 82%,transparent);border-bottom:1px solid #3b4651}.shelf-nav .shelf-head{margin:0 0 7px}.component-jump{width:100%;height:34px;padding:0 32px 0 10px;border:1px solid #526170;border-radius:6px;background:#222a32;color:#d6e0e9;font:11px "Microsoft YaHei",sans-serif;cursor:pointer;outline:none}.component-jump:hover,.component-jump:focus-visible{border-color:#58aee8;box-shadow:0 0 0 2px #58aee822}.shelf-item.jump-target{border-color:#65bdff;background:#3a4a58;box-shadow:0 0 0 2px #65bdff33,0 0 18px #55aee844}.style-handdrawn .shelf-item{min-height:106px;padding:5px 4px 7px}.style-handdrawn .shelf-item .mini{display:none}.style-handdrawn .handdrawn-thumb{display:block;height:76px;margin:0 auto 1px}.style-handdrawn .handdrawn-thumb svg{display:block;width:100%;height:100%}.style-handdrawn .shelf-label{min-height:18px;line-height:1.2}@media(max-width:980px){.side{display:none}}</style>
+  <style>
+    .component-3d-plinth{display:none}
+    .style-3d .stage::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 13% 4%,#ffd59c73 0,transparent 34%),radial-gradient(ellipse at 52% 78%,transparent 35%,#061d20a6 100%);mix-blend-mode:screen}
+    .style-3d .lab-component{isolation:isolate;--plinth-top:#f2f1e9;--plinth-front:#a8afac;--plinth-edge:#727d7d;transform:var(--view-transform,translate(0,0) scale(1)) perspective(640px) rotateX(20deg) rotateY(-11deg) translateZ(28px) scale(1.1);transform-origin:50% 78%!important;filter:drop-shadow(18px 25px 11px #061214d9) drop-shadow(-3px -3px 2px #fff5d055)}
+    .style-3d .lab-component::before{left:0;right:-16%;bottom:-17%;height:31%;z-index:-2;background:#031012c4;filter:blur(9px);transform:translate3d(18px,13px,-54px) skewX(-25deg)}
+    .style-3d .lab-component::after{content:"";position:absolute;inset:2% 3% 23%;z-index:8;pointer-events:none;background:linear-gradient(132deg,#fff7d840 0,transparent 27%,transparent 68%,#123b451c 100%);clip-path:polygon(4% 3%,96% 3%,92% 92%,8% 92%);mix-blend-mode:screen}
+    .style-3d .component-3d-plinth{display:block;position:absolute;z-index:1;left:5%;right:1%;bottom:7%;height:17%;border:1px solid #ffffff85;border-radius:7px 9px 6px 7px;background:linear-gradient(180deg,var(--plinth-top) 0 34%,var(--plinth-front) 35% 78%,var(--plinth-edge) 79% 100%);box-shadow:7px 9px 0 #485354cc,13px 16px 15px #051113aa;transform:translate3d(5px,7px,-16px) skewX(-7deg);pointer-events:none}
+    .style-3d .component-3d-plinth::before{content:"";position:absolute;left:2%;right:1%;top:-7px;height:10px;border-radius:8px 8px 3px 3px;background:linear-gradient(155deg,#fffffb,#d8ded9 58%,#929d9b);box-shadow:inset 0 1px #fff}
+    .style-3d .component-3d-plinth::after{content:"";position:absolute;top:18%;right:-8px;width:9px;height:82%;background:linear-gradient(180deg,#a9b2b0,#596465);clip-path:polygon(0 0,100% 16%,100% 86%,0 100%)}
+    .style-3d .component-image,.style-3d .component-sprite{position:relative;z-index:3;filter:contrast(1.2) saturate(1.2) brightness(1.08) drop-shadow(5px 7px 3px #0813169c)}
+    .style-3d .component-visual-part{z-index:5;filter:contrast(1.15) saturate(1.15) drop-shadow(3px 4px 2px #08131699)}
+    .style-3d .component-voltmeter,.style-3d .component-ammeter{--plinth-top:#30363a;--plinth-front:#11171b;--plinth-edge:#06090b;transform:var(--view-transform,translate(0,0) scale(1)) perspective(640px) rotateX(1deg) rotateY(-12deg) translateZ(42px) scale(1.13);transform-origin:50% 91%!important;filter:drop-shadow(19px 25px 12px #061214e8) drop-shadow(-3px -3px 2px #fff5d055)}
+    .style-3d .component-voltmeter .component-3d-plinth,.style-3d .component-ammeter .component-3d-plinth{left:7%;right:0;bottom:2%;height:20%;border-color:#525c62;border-radius:4px;background:linear-gradient(180deg,#343b3f 0 22%,#14191c 23% 72%,#050708 73%);box-shadow:8px 9px 0 #030506dd,15px 18px 15px #031013cc}
+    .style-3d .component-voltmeter .component-3d-plinth::before,.style-3d .component-ammeter .component-3d-plinth::before{background:linear-gradient(155deg,#596268,#282f33 62%,#0c1012)}
+    .style-3d .lab-component.dragging{transform:var(--view-transform,translate(0,0) scale(1)) perspective(640px) rotateX(16deg) rotateY(-9deg) translateZ(78px) scale(1.15);filter:drop-shadow(24px 34px 14px #041012dd) drop-shadow(0 0 10px #82cfffa0)}
+    .style-3d .component-voltmeter.dragging,.style-3d .component-ammeter.dragging{transform:var(--view-transform,translate(0,0) scale(1)) perspective(640px) rotateX(-1deg) rotateY(-10deg) translateZ(82px) scale(1.17)}
+    .style-3d .wire-shadow{stroke:#041012e6;stroke-width:11;transform:translate(8px,12px);filter:blur(2px)}
+    .style-3d .wire-visible{stroke-width:6.2;filter:drop-shadow(-1.4px -1.4px 0 #ffd0c7) drop-shadow(1px 2px 1px #7b1e18) drop-shadow(4px 7px 3px #061214b8)}
+    .style-3d .shelf-item .mini{transform:perspective(360px) rotateX(18deg) rotateY(-12deg) translateZ(16px) scale(1.08);filter:drop-shadow(12px 15px 6px #071116dd) drop-shadow(-2px -2px 1px #ffffff44)}
+    @media(prefers-reduced-motion:no-preference){.style-3d .lab-component{transition:filter .2s ease}.style-3d .lab-component.selected:not(.dragging){animation:component-3d-select .34s ease-out}@keyframes component-3d-select{50%{filter:drop-shadow(22px 31px 13px #061214e6) drop-shadow(0 0 9px #67c5ff99)}}}
+  </style>
+  <style>
+    .component-doubleThrowSwitch .switch-hit span{display:none}
+    .component-doubleThrowSwitch .switch-hit{left:5%;top:0;width:90%;height:82%;z-index:23;touch-action:manipulation}
+    .component-knifeSwitch,.component-doubleThrowSwitch{cursor:pointer}
+    .component-knifeSwitch .switch-hit{left:8%;top:0;width:84%;height:74%;z-index:23;touch-action:manipulation}
+    .wire-shadow,.wire-visible{pointer-events:none}
+  </style>
+<style>
+  .original-3d-gallery{display:none}
+  .show-current-direction .wire-visible{animation:none!important;stroke-dasharray:none!important}
+  .show-current-direction .wire-visible{animation:none;stroke-dasharray:none}
+  .show-current-direction .flow-forward .wire-visible{animation:current-flow .8s linear infinite;stroke-dasharray:10 7}
+  .show-current-direction .flow-reverse .wire-visible{animation:current-flow .8s linear infinite reverse;stroke-dasharray:10 7}
+  .original-three-bench{display:none;position:absolute;inset:0;z-index:20;overflow:hidden}
+  .style-3d .original-three-bench{display:block}
+  .original-three-bench canvas{display:block;width:100%;height:100%;touch-action:none}
+  .style-3d .stage>.lab-component,.style-3d #wireLayer,.style-3d .stage>.wire-hint,.style-3d .stage::before,.style-3d .stage::after{display:none!important}
+  .three-bench-labels{position:absolute;inset:0;pointer-events:none}
+  .three-component-label{position:absolute;transform:translate(-50%,-100%);padding:3px 7px;border:1px solid #62828a;border-radius:5px;background:#162c31e8;color:#e7f2ef;font-size:11px;white-space:nowrap;pointer-events:auto;cursor:pointer}
+  .three-component-label.selected{border-color:#7bd5ff}
+  .three-bench-status{position:absolute;bottom:12px;left:12px;right:12px;padding:8px;border-radius:6px;background:#142c32dd;color:#d4e5e9;font-size:11px;pointer-events:none}
+  .three-bench-inspector{position:absolute;left:12px;bottom:62px;max-width:300px;padding:12px;background:#1b2b32ed;border:1px solid #527582;border-radius:8px;font-size:12px}
+  .three-bench-inspector:empty{display:none}.three-bench-inspector>button{float:right;margin-left:12px}.three-bench-inspector label{display:block;margin-top:8px}.three-bench-inspector input{width:95px;background:#18262b;border:1px solid #62828a;padding:3px;color:white}
+  .style-3d .items{display:none!important}
+  .style-3d .original-3d-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px}
+  .original-model-card{min-width:0;min-height:130px;border:1px solid #647482;border-radius:8px;background:linear-gradient(145deg,#465562,#26313a);cursor:pointer;padding:6px;color:#edf2f6}
+  .original-model-card img{width:100%;height:96px;object-fit:contain;display:block}
+  .original-model-card small{display:block;font-size:10px;color:#b8d7e7}
+  .model-detail{width:min(680px,90vw);border:1px solid #647482;border-radius:12px;background:#26313a;color:#edf2f6}
+  .model-detail::backdrop{background:#0009}.model-detail img{display:block;width:100%;height:330px;object-fit:contain}.model-detail a{color:#8cd0ff}.model-detail button{float:right}
+  .three-model-thumb{display:none;width:100%;height:72px;margin:0 auto;object-fit:contain;pointer-events:none}
+  .style-3d .shelf-item>.mini,.style-3d .shelf-item>.handdrawn-thumb{display:none!important}
+  .style-3d .shelf-item:not([data-three-preview-ready="true"])>.mini{display:grid!important;opacity:.82;filter:drop-shadow(8px 11px 5px #071116cc);transform:perspective(360px) rotateX(18deg) rotateY(-12deg) scale(.9)}
+  .style-3d .shelf-item>.three-model-thumb{display:block;filter:drop-shadow(8px 11px 5px #071116cc);transform:scale(1.05)}
+  .style-3d .shelf-item[data-three-preview-ready="error"]::before,.style-3d .shelf-item[data-three-preview-ready="missing"]::before{content:"3D模型未加载";display:grid;place-items:center;height:72px;color:#ff9b91;font-size:9px}
+</style>
+<style>
+  /* Match realistic shelf geometry; only the artwork and palette change. */
+  .style-handdrawn .shelf-item{min-height:103px;padding:7px 4px}
+  .style-handdrawn .shelf-item-extended{min-height:112px}
+  .style-handdrawn .handdrawn-thumb{height:72px;margin:0}
+  .style-handdrawn .shelf-label{min-height:30px;line-height:1.35}
+  .style-3d .original-3d-gallery{grid-template-columns:1fr 1fr;gap:7px;padding:0}
+  .original-model-card{position:relative;min-height:103.5px;padding:7px 4px;font-size:10px;line-height:1.45;border-radius:7px}
+  .original-model-card img{height:72px}
+  .original-model-extended{min-height:112px}
+  .original-model-extended>span{display:block;min-height:30px;line-height:1.35}
+  .original-model-card small{position:absolute;inset:8px 3px auto;font-size:9px;pointer-events:none}
+  .original-model-card[data-ready="true"] small{display:none}
+</style>
+<style>
+  .layout.preset-fit-room{overflow:hidden;min-height:0;grid-template-columns:minmax(0,1fr) 292px}
+  .layout.preset-fit-room .stage{min-width:0;min-height:0;overflow:hidden}
+  @media(max-width:980px){.layout.preset-fit-room{grid-template-columns:minmax(0,1fr)}}
+</style>
+<style>
+  .parameter-visibility-toggle{left:0;right:auto;top:calc(100% + 20px)}
+  .parameters-collapsed .parameter-visibility-toggle{display:block!important}
+  .lab-component:not(.parameters-hidden) .component-parameters{display:flex!important}
+  .lab-component .component-parameters{left:0;top:calc(100% + 41px);transform:none;flex-direction:column;align-items:flex-start;max-height:190px;overflow:auto;max-width:260px}
+  .three-parameter-toggle{position:absolute;z-index:34;pointer-events:auto;cursor:pointer;padding:3px 6px;border:1px solid #62828a;border-radius:4px;background:#162c31ed;color:#e7f2ef;font-size:11px}
+</style>
+<script type="application/json" id="fx-resource-config" data-fx-resource-runtime="2">{"chatId":"40A2D372AE10A35E022762053EE29971","env":"online","onlineUrl":"https://musk-online.fbcontent.cn/pub-musk-ai-studio/workflow/file/document/acWnferMD4Xo9BqaJKXuYH.html"}</script><script async src="https://www.feixianglaoshi.com/resource-runtime/v2.js" data-fx-resource-runtime="2"></script></head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="tools"><button class="tool" id="catalogBtn">▦ <span class="label">实验目录</span></button><button class="tool" id="undoBtn" title="撤销上一步连线或操作">↩ <span class="label">撤回</span></button><button class="tool" id="shortBtn" title="把当前选中的灯泡/电阻两端短接">⚡ <span class="label">短路</span></button><button class="tool" id="clearWiresBtn">⌫ <span class="label">清除导线</span></button><button class="tool" id="deleteComponentBtn">✕ <span class="label">删除器材</span></button><button class="tool" id="resetBtn">↻ <span class="label">重置场景</span></button><button class="tool" id="portsBtn">◎ <span class="label">端口</span></button></div>
+    <div class="heading"><strong>中学电路实验台</strong><span>23 REUSABLE ELECTRICAL COMPONENTS</span></div>
+    <div class="top-actions"><span class="mode">FREE / DC</span><button class="tool" id="selftestBtn">✓ 引擎自测</button></div>
+  </header>
+  <main class="layout">
+    <section class="stage" id="stage" aria-label="自由直流电路操作台">
+      <section class="experiment-home" id="experimentHome" aria-label="实验目录"></section>
+      <section class="schematic-panel" id="schematicPanel" hidden><header class="schematic-head"><span id="schematicTitle">实验电路图</span><button class="schematic-toggle" id="schematicToggle" aria-label="收起电路图">−</button></header><div class="schematic-body" id="schematicBody"></div></section>
+      <nav class="lab-toolbar" id="labToolbar" aria-label="实验工具" hidden><button class="lab-tool icon" id="zoomOutBtn" aria-label="缩小画布">−</button><span class="zoom-value" id="zoomValue">100%</span><button class="lab-tool icon" id="zoomInBtn" aria-label="放大画布">＋</button><button class="lab-tool" id="removeWiresBtn">去掉导线</button><button class="lab-tool" id="restoreWiresBtn" disabled>恢复连线</button><button class="lab-tool" id="checkCircuitBtn">检查电路</button><button class="lab-tool" id="currentDirectionBtn">电流方向</button><button class="lab-tool" id="collapseParametersBtn">收起参数</button></nav>
+      <svg id="wireLayer" class="wire-layer" aria-label="导线层"></svg>
+      <details class="wire-hint" id="wireHelp" open><summary aria-label="展开或收起接线提示">接线提示</summary><span id="wireHint">点接线柱连线，点空白处绕线；点导线断开</span><span class="component-drag-help" style="display:block">按住元件名称可拖动元件</span></details>
+      <section class="event-panel"><div class="event-title"><span>CIRCUIT EVENTS</span><span>LIVE</span></div><div class="event-log" id="eventLog"></div></section>
+      <section class="inspector" id="inspector"><h3 id="inspectorTitle">组件</h3><div class="capabilities" id="capabilityList"></div><div class="state-list" id="stateList"></div></section>
+    </section>
+    <aside class="side"><nav class="categories" aria-label="元件视觉风格"><button class="visual-style" type="button" data-visual-style="handdrawn" aria-pressed="false"><b>✎</b><span>板书</span></button><button class="visual-style active" type="button" data-visual-style="realistic" aria-pressed="true"><b>▣</b><span>写实</span></button><button class="visual-style" type="button" data-visual-style="3d" aria-pressed="false"><b>◇</b><span>3D</span></button></nav><section class="shelf"><div class="shelf-nav"><div class="shelf-head">点击添加独立实例</div><select class="component-jump" id="componentJump" aria-label="快速定位右侧元件"><option value="">快速定位元件…</option></select></div><div class="items">
+      <button class="shelf-item" data-spawn-type="voltmeter"><span class="mini meter-mini meter-mini-voltmeter"><img class="meter-mini-layer meter-mini-base" src="assets/voltmeter-matched-base-v3.png" alt=""><img class="meter-mini-layer meter-mini-needle" src="assets/ammeter.png" alt=""></span>电压表 <span class="physics-symbol">V₁</span></button>
+      <button class="shelf-item" data-spawn-type="ammeter"><span class="mini meter-mini meter-mini-ammeter"><img class="meter-mini-layer meter-mini-base" src="assets/ammeter-base.png" alt=""><img class="meter-mini-layer meter-mini-needle" src="assets/ammeter.png" alt=""></span>电流表 <span class="physics-symbol">A₁</span></button>
+      <button class="shelf-item" data-spawn-type="fixedResistor"><span class="mini"><img src="assets/fixed-resistor-red-right.png" alt=""></span>定值电阻 <span class="physics-symbol">R₁</span></button>
+      <button class="shelf-item" data-spawn-type="rheostat"><span class="mini"><img src="assets/rheostat-four-terminal-v2.png" alt=""></span>滑动变阻器 <span class="physics-symbol">R₂</span></button>
+      <button class="shelf-item" data-spawn-type="batteryPack"><span class="mini"><img src="assets/battery-pack.png" alt=""></span>电池组 <span class="physics-symbol">E₁</span></button>
+      <button class="shelf-item" data-spawn-type="knifeSwitch"><span class="mini"><img src="assets/knife-switch.png" alt=""></span>单刀开关 <span class="physics-symbol">S₁</span></button>
+      <button class="shelf-item" data-spawn-type="lamp"><span class="mini"><img src="assets/lamp.png" alt=""></span>小灯泡 <span class="physics-symbol">L₁</span></button>
+    </div></section></aside>
+  </main>
+  <footer class="footer"><b>安全提示</b> 仿真不替代真实实验；实际接线应先断开电源，并由教师检查后通电。</footer>
+</div>
+<script src="offline-file-assets.js"></script>
+<script src="config/runtime-config.js?v=resistor-default-6ohm-3"></script>
+<script src="config/extended-components.js?v=led-polarity-6"></script>
+<script src="config/experiment-presets.js?v=joule-titles-34"></script>
+<script src="engine/core.js?v=mirror-terminal-9"></script>
+<script src="engine/electricity.js?v=diode-4"></script>
+<script src="engine/effects.js?v=visible-wire-bow-16"></script>
+<script src="engine/behaviors.js?v=double-throw-direction-2"></script>
+<style>
+  .layout.parallel-current-room{overflow:auto;grid-template-columns:minmax(988px,1fr) 292px;scrollbar-color:#657786 #232930}
+  .layout.parallel-current-room>.stage{min-width:988px;min-height:618px}
+  .layout.series-voltage-room{overflow:hidden;grid-template-columns:minmax(0,1fr) 292px}
+  .layout.series-voltage-room>.stage{min-width:0;min-height:0;overflow:hidden}
+  @media(max-width:980px){.layout.series-voltage-room{grid-template-columns:minmax(0,1fr)}}
+  @media(max-width:980px){.layout.parallel-current-room{grid-template-columns:minmax(988px,1fr)}}
+</style>
+<link rel="stylesheet" href="engine/catalog-previews.css?v=1">
+<script src="app.js?v=diode-direction-34"></script>
+<script src="engine/powered-feedback.js?v=1"></script>
+<script src="engine/joule-comparison.js?v=1"></script>
+<script src="engine/joule-board.js?v=2"></script>
+<script src="engine/resistance-inquiry.js?v=2"></script>
+<script src="engine/pencil-clips.js?v=1"></script>
+<script src="engine/double-throw-control.js?v=1"></script>
+  <script src="three-previews.bundle.js?v=mirrored-source-22"></script>
+  <script src="vendor/html2canvas.min.js"></script>
+  <script>(function(){
+  const button=document.createElement('button');button.id='screenshotBtn';button.className='tool';button.type='button';button.textContent='▧ 截图';button.title='保存当前可见主页面为 PNG';
+  document.querySelector('#catalogBtn').after(button);
+  const status=document.createElement('div');status.setAttribute('role','status');status.dataset.html2canvasIgnore='true';status.hidden=true;
+  status.style.cssText='position:fixed;left:20px;bottom:48px;z-index:9999;padding:10px 16px;border:1px solid #60758a;border-radius:8px;background:#20272f;color:#edf5ff;max-width:80vw';document.body.append(status);
+  let timer,assetsReady;
+  function notify(message){status.textContent=message;status.hidden=false;clearTimeout(timer);timer=setTimeout(()=>status.hidden=true,5000);}
+  function loadAssets(){if(!assetsReady)assetsReady=new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='screenshot-assets.js';s.onload=resolve;s.onerror=()=>{assetsReady=null;s.remove();reject(Error('截图资源加载失败'));};document.head.append(s);});return assetsReady;}
+  button.addEventListener('click',async()=>{
+    if(button.disabled)return;button.disabled=true;button.setAttribute('aria-busy','true');
+    try{
+      await loadAssets();await document.fonts.ready;
+      const app=document.querySelector('.app'),base=new URL('.',document.baseURI);
+      const embedded=value=>{try{const url=new URL(value,base),key=decodeURIComponent(url.pathname.slice(base.pathname.length));return window.CIRCUIT_SCREENSHOT_ASSETS[key]||value;}catch{return value;}};
+      const originals=[app,...app.querySelectorAll('*')];
+      const images=new Map(),backgrounds=new Map(),canvases=new Map();
+      // Refresh WebGL synchronously before reading its default (non-preserved) buffer.
+      const three=window.__lab?.three;if(document.body.dataset.visualStyle==='3d'&&three)three.renderer.render(three.scene,three.camera);
+      originals.forEach((el,i)=>{
+        el.setAttribute('data-capture-index',String(i));
+        if(el instanceof HTMLImageElement)images.set(i,embedded(el.currentSrc||el.src));
+        const bg=getComputedStyle(el).backgroundImage;
+        if(bg&&bg!=='none')backgrounds.set(i,bg.replace(/url\(["']?(.*?)["']?\)/g,(_,url)=>'url("'+embedded(url)+'")'));
+        if(el instanceof HTMLCanvasElement&&el.width&&el.height)canvases.set(i,{src:el.toDataURL('image/png'),width:getComputedStyle(el).width,height:getComputedStyle(el).height});
+      });
+      const canvas=await html2canvas(app,{
+        backgroundColor:'#22272e',scale:Math.min(2,devicePixelRatio||1),width:innerWidth,height:innerHeight,windowWidth:innerWidth,windowHeight:innerHeight,logging:false,allowTaint:false,
+        onclone:async doc=>{
+          const clone=doc.querySelector('.app'),elements={};
+          for(const el of doc.querySelectorAll('[data-capture-index]'))elements[el.getAttribute('data-capture-index')]=el;
+          for(const [i,src]of images){elements[i].removeAttribute('srcset');elements[i].src=src;}
+          for(const [i,bg]of backgrounds)elements[i].style.backgroundImage=bg;
+          for(const [i,snapshot]of canvases){const original=elements[i],img=doc.createElement('img');img.src=snapshot.src;img.style.cssText=original.style.cssText;img.className=original.className;img.style.width=snapshot.width;img.style.height=snapshot.height;img.style.display='block';original.replaceWith(img);}
+          for(const image of doc.querySelectorAll('svg image')){const href=image.getAttribute('href');if(href)image.setAttribute('href',embedded(href));}
+          const b=doc.querySelector('#screenshotBtn');b.disabled=false;b.removeAttribute('aria-busy');
+          await Promise.all([...clone.querySelectorAll('img')].map(img=>img.decode().catch(()=>{})));
+        }
+      });
+      const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('PNG生成失败')),'image/png'));
+      const stamp=new Date().toLocaleString('sv-SE').replaceAll(':','-').replace(' ','_'),filename='电路实验台_'+stamp+'.png';
+      const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+      window.__lab.lastScreenshot={filename,width:canvas.width,height:canvas.height,bytes:blob.size,mode:document.body.dataset.visualStyle};notify('截图已生成，请在浏览器下载中查看。');
+    }catch(error){window.__lab.screenshotError=error.message;notify('截图失败：'+error.message+'，请重试。');}
+    finally{for(const el of document.querySelectorAll('[data-capture-index]'))el.removeAttribute('data-capture-index');button.disabled=false;button.removeAttribute('aria-busy');}
+  });
+})();
+</script>
+
+<script>
+/* 防下载防护：禁右键、F12、查看源码、另存为 */
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+document.addEventListener('keydown', function(e){
+  if (e.key === 'F12') e.preventDefault();
+  if (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) e.preventDefault();
+  if (e.ctrlKey && ['u','U','s','S','p','P'].includes(e.key)) e.preventDefault();
+});
+document.addEventListener('selectstart', function(e){ e.preventDefault(); });
+document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+document.body.style.userSelect = 'none';
+setInterval(function(){
+  if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+    document.body.style.filter = 'blur(20px)';
+  }
+}, 1500);
+
+/* 连线友好化：接线柱放大、一直可见、好点 */
+var style = document.createElement('style');
+style.textContent = `
+  .electrical-port{width:28px !important;height:28px !important;opacity:1 !important;background:#54a8f5aa !important;box-shadow:0 0 0 2px #fff8,0 0 10px #54a8f5 !important;}
+  .electrical-port:hover{transform:translate(-50%,-50%) scale(1.3) !important;background:#54a8f5 !important;}
+  .electrical-port.pending{background:#ffc35a !important;box-shadow:0 0 0 4px #ffc35a55,0 0 18px #ffc35a !important;}
+`;
+document.head.appendChild(style);
+</script>
+
+<script>
+/* 撤回功能：真正撤销——利用引擎"点导线断开"和"删除器材"逻辑 */
+(function(){
+  var wireHistory = [];    // 存导线 <g> 元素
+  var compHistory = [];     // 存元件元素
+  var wireLayer = document.getElementById('wireLayer');
+  var stage = document.getElementById('stage');
+
+  // 监听新增导线
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(node){
+        if(node.nodeType===1 && node.tagName==='g' && node.querySelector('.wire-hit')){
+          wireHistory.push(node);
+        }
+      });
+    });
+  }).observe(wireLayer, {childList:true, subtree:true});
+
+  // 监听新增元件
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(node){
+        if(node.nodeType===1 && node.classList && node.classList.contains('lab-component')){
+          compHistory.push(node);
+        }
+      });
+    });
+  }).observe(stage, {childList:true, subtree:true});
+
+  function fire(el, type){
+    el.dispatchEvent(new PointerEvent(type, {bubbles:true, cancelable:true, pointerId:1}));
+    el.dispatchEvent(new MouseEvent(type, {bubbles:true, cancelable:true}));
+  }
+
+  document.getElementById('undoBtn').addEventListener('click', function(){
+    // 1. 优先撤最后一根导线：模拟点它的 wire-hit（引擎自带"点导线断开"）
+    while(wireHistory.length){
+      var wire = wireHistory.pop();
+      if(!wire.isConnected) continue;  // 已被手动断开，跳过
+      var hit = wire.querySelector('.wire-hit');
+      if(hit){ fire(hit,'pointerdown'); fire(hit,'pointerup'); fire(hit,'click'); }
+      return;
+    }
+    // 2. 再撤最后添加的元件：选中后点"删除器材"
+    while(compHistory.length){
+      var comp = compHistory.pop();
+      if(!comp.isConnected) continue;
+      fire(comp,'pointerdown'); fire(comp,'pointerup'); fire(comp,'click');
+      setTimeout(function(){
+        var del = document.getElementById('deleteComponentBtn');
+        if(del) del.click();
+      }, 80);
+      return;
+    }
+  });
+
+  /* 短路按钮：绕过布线校验，直接把选中元件的两个接线柱短接 */
+  var engineRef = null;
+  function getEngine(){
+    if(engineRef) return engineRef;
+    if(window.__lab && window.__lab.engine){ engineRef = window.__lab.engine; return engineRef; }
+    // hook LabComponent.setState 拿到 engine 引用
+    if(window.VirtualLab && window.VirtualLab.LabComponent && !window.VirtualLab.LabComponent.__hooked){
+      window.VirtualLab.LabComponent.__hooked = true;
+      var orig = window.VirtualLab.LabComponent.prototype.setState;
+      window.VirtualLab.LabComponent.prototype.setState = function(p, s){
+        window.__engineRef = this.engine;
+        return orig.call(this, p, s);
+      };
+    }
+    if(window.__engineRef){ engineRef = window.__engineRef; return engineRef; }
+    return null;
+  }
+  document.getElementById('shortBtn').addEventListener('click', function(){
+    var eng = getEngine();
+    if(!eng){ alert('引擎还在加载，等几秒再点'); return; }
+    var sel = eng.selected;
+    if(!sel){ alert('先用鼠标点一下要短路的灯泡或电阻'); return; }
+    var ports = Object.entries(sel.definition.ports||{})
+      .filter(function(x){ return x[1].kind === 'electricalTerminal'; })
+      .map(function(x){ return x[0]; });
+    if(ports.length < 2){ alert('这个元件没有两个接线柱，不能短路'); return; }
+    var a = { componentId: sel.id, port: ports[0] };
+    var b = { componentId: sel.id, port: ports[1] };
+    // 检查是否已经短路过
+    var exists = eng.connections.some(function(c){
+      var ka = eng.terminalKey(a), kb = eng.terminalKey(b);
+      return (eng.terminalKey(c.a)===ka && eng.terminalKey(c.b)===kb) ||
+             (eng.terminalKey(c.a)===kb && eng.terminalKey(c.b)===ka);
+    });
+    if(exists){ alert('已经短路过了'); return; }
+    var conn = eng.connect(a, b);
+    if(conn){
+      // 强制重算电路
+      eng.bus.emit('connectionchange', { type:'connect', connection: conn });
+      eng.bus.emit('statechange', { component: sel, patch: {} });
+    } else {
+      alert('短路失败');
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
+
+
+
