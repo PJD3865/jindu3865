@@ -172,6 +172,19 @@ body {
   font-size: 14px;
 }
 
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink2);
+  font-size: 13px;
+}
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink2);
+  font-size: 13px;
+}
+
 footer {
   text-align: center;
   padding: 20px;
@@ -215,70 +228,49 @@ footer {
       <span>点击卡片打开</span>
     </div>
 
-    <!-- 资源列表：以后加新文件，就在这里加一个 <a class="item"> -->
-    <a class="item" href="物理.html" target="_blank">
-      <div class="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="info">
-        <h3>物理互动课件</h3>
-        <p>初中物理电学 · 电路实验台 · 串并联电路</p>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="item" href="电路图.html" target="_blank">
-      <div class="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="9" stroke-width="1.6"/>
-          <path d="M8 12h8M12 8v8" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="info">
-        <h3>电路图画板</h3>
-        <p>二维标准电路图 · 拖元件连线 · 电流方向动画 · 上课讲题用</p>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="item" href="信息技术.html" target="_blank">
-      <div class="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="info">
-        <h3>信息技术</h3>
-       </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="item" href="光的折射.html" target="_blank">
-      <div class="icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="info">
-        <h3>光的折射演示</h3>
-        <p>演示作用</p>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-
-
-
+    <div id="list">
+      <div class="loading">正在加载资源…</div>
+    </div>
   </main>
 
   <footer>© 啤酒肚老师专属平台 · 教学资源库</footer>
 </div>
 
 <script>
+/* ============================================================
+   资源列表自动生成配置区
+   ------------------------------------------------------------
+   上传新的 html 到 GitHub 仓库后，刷新本页会自动出现卡片。
+   想给某个文件写好看的标题和介绍，就在下面 KNOWN 里加一条。
+   没加进来的文件，会自动用文件名当标题显示。
+   ============================================================ */
+const REPO = 'PJD3865/jindu3865';
+
+const KNOWN = {
+  '物理.html':   { title: '物理互动课件', desc: '初中物理电学 · 电路实验台 · 串并联电路', icon: 'bolt' },
+  '电路图.html': { title: '电路图画板',   desc: '二维标准电路图 · 拖元件连线 · 电流方向动画 · 上课讲题用', icon: 'circuit' },
+  '光的折射.html': { title: '光的折射演示', desc: '光的折射现象 · 动画演示', icon: 'wave' },
+  '信息技术.html': { title: '信息技术',     desc: '信息技术课件', icon: 'chip' }
+};
+
+const ORDER = ['电路图.html', '物理.html', '光的折射.html', '信息技术.html'];
+
+const ICONS = {
+  bolt:    '<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
+  circuit: '<circle cx="12" cy="12" r="9" stroke-width="1.6"/><path d="M8 12h8M12 8v8" stroke-width="1.6" stroke-linecap="round"/>',
+  wave:    '<path d="M3 12c3-6 6 6 9 0s6-6 9 0" stroke-width="1.6" stroke-linecap="round"/>',
+  chip:    '<rect x="6" y="6" width="12" height="12" rx="2" stroke-width="1.6"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" stroke-width="1.6"/>',
+  file:    '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="1.6"/><path d="M14 2v6h6" stroke-width="1.6"/>'
+};
+
+/* ---------- 密码门 ---------- */
 function check() {
   var v = document.getElementById('pwd').value;
   if (v === '8888') {
     sessionStorage.setItem('ok', '1');
     document.getElementById('gate').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
+    loadList();
   } else {
     document.getElementById('err').style.display = 'block';
     document.getElementById('pwd').value = '';
@@ -288,23 +280,93 @@ function check() {
 document.getElementById('pwd').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') check();
 });
+
+/* ---------- 列表加载 ---------- */
+let loaded = false;
+
+function loadList() {
+  if (loaded) return;
+  loaded = true;
+
+  // 先用缓存渲染，避免每次都要等网络
+  let cached = null;
+  try {
+    const raw = localStorage.getItem('jindu_files');
+    if (raw) {
+      const o = JSON.parse(raw);
+      if (Date.now() - o.t < 10 * 60 * 1000) cached = o.files;
+    }
+  } catch (e) {}
+
+  if (cached && cached.length) renderList(cached);
+
+  fetch('https://api.github.com/repos/' + REPO + '/contents/')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const files = data
+        .filter(f => f.type === 'file' && /\.html?$/i.test(f.name) && f.name.toLowerCase() !== 'index.html')
+        .map(f => f.name);
+      if (files.length) {
+        try {
+          localStorage.setItem('jindu_files', JSON.stringify({ t: Date.now(), files: files }));
+        } catch (e) {}
+        renderList(files);
+      }
+    })
+    .catch(() => {
+      if (!cached) renderList(Object.keys(KNOWN));
+    });
+}
+
+function sortFiles(list) {
+  const known = ORDER.filter(n => list.indexOf(n) >= 0);
+  const rest = list.filter(n => ORDER.indexOf(n) < 0).sort((a, b) => a.localeCompare(b, 'zh'));
+  const others = list.filter(n => KNOWN[n] && ORDER.indexOf(n) < 0 && known.indexOf(n) < 0);
+  return known.concat(rest);
+}
+
+function renderList(files) {
+  const box = document.getElementById('list');
+  const sorted = sortFiles(files);
+  if (!sorted.length) {
+    box.innerHTML = '<div class="empty">还没有资源，去 GitHub 上传 html 文件吧</div>';
+    return;
+  }
+  let html = '';
+  sorted.forEach(function(name) {
+    const meta = KNOWN[name] || { title: name.replace(/\.html?$/i, ''), desc: '点击打开', icon: 'file' };
+    const href = encodeURIComponent(name);
+    html += '<a class="item" href="' + href + '" target="_blank">'
+      + '<div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">'
+      + (ICONS[meta.icon] || ICONS.file)
+      + '</svg></div>'
+      + '<div class="info"><h3>' + esc(meta.title) + '</h3><p>' + esc(meta.desc) + '</p></div>'
+      + '<div class="arrow">→</div></a>';
+  });
+  box.innerHTML = html;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* ---------- 自动进入（同一次会话内） ---------- */
 if (sessionStorage.getItem('ok') === '1') {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
+  loadList();
 }
 
-/* 防下载防护 */
+/* ---------- 防下载防护 ---------- */
 document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
 document.addEventListener('keydown', function(e){
   if (e.key === 'F12') e.preventDefault();
   if (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) e.preventDefault();
   if (e.ctrlKey && ['u','U','s','S','p','P'].includes(e.key)) e.preventDefault();
 });
-// 禁选文字、禁拖图片
 document.addEventListener('selectstart', function(e){ e.preventDefault(); });
 document.addEventListener('dragstart', function(e){ e.preventDefault(); });
 document.body.style.userSelect = 'none';
-// 检测 DevTools：开了就清空页面
 setInterval(function(){
   if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
     document.body.style.filter = 'blur(20px)';
