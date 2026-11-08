@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="img-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com; media-src 'self' data: blob: https://*.fbcontent.cn https://*.aliyuncs.com https://storage.googleapis.com;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D球形学生随机点名程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(to bottom, #0a0a2a, #1a1a40, #0a0a2a);
+            color: white;
+            height: 100vh;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+        
+        .controls-container {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: transparent;
+            z-index: 10;
+        }
+        
+        #canvas-container {
+            flex: 1;
+            height: 100%;
+            position: relative;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+        }
+        
+        button {
+            padding: 15px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(110, 142, 251, 0.9), rgba(167, 119, 227, 0.9));
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        
+        button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+        
+        button:hover:before {
+            left: 100%;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #start-btn {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(46, 125, 50, 0.9));
+        }
+        
+        #stop-btn {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.9), rgba(198, 40, 40, 0.9));
+        }
+        
+        #reset-btn {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(239, 108, 0, 0.9));
+        }
+        
+        #download-template-btn {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.9), rgba(21, 101, 192, 0.9));
+        }
+        
+        #import-names-btn {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.9), rgba(123, 31, 162, 0.9));
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .result {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 20;
+            text-align: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            border: 2px solid gold;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .result.show {
+            opacity: 1;
+            font-size: 56px;
+        }
+        
+
+        
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            font-size: 14px;
+            color: #aaa;
+            text-align: center;
+            z-index: 10;
+            padding: 0 20px;
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            border: 1px solid #aaa;
+        }
+        
+        .student-count {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .controls-container {
+                position: absolute;
+                bottom: 20px;
+                top: auto;
+                right: 50%;
+                transform: translateX(50%);
+                width: auto;
+                height: auto;
+                padding: 10px;
+                flex-direction: row;
+            }
+            
+            #canvas-container {
+                width: 100%;
+                height: 70%;
+            }
+            
+            .controls {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+            
+            .result {
+                left: 50%;
+            }
+            
+            .instructions {
+                left: 0;
+            }
+            
+            .student-count {
+                left: 20px;
+            }
+        }
+    </style>
+<script type="application/json" id="fx-resource-config" data-fx-resource-runtime="2">{"chatId":"00BE553D641421F8A5088B360B77BEC8","env":"online","onlineUrl":"https://musk-online.fbcontent.cn/pub-musk-ai-studio/workflow/file/document/CaFu3ijCLqEwc9oRN8Ryg3.html?v=2"}</script><script async src="https://www.feixianglaoshi.com/resource-runtime/v2.js" data-fx-resource-runtime="2"></script></head>
+<body>
+    <div class="container">
+        <div class="controls-container">
+            <div class="controls">
+                <button id="start-btn">开始</button>
+                <button id="stop-btn">停止</button>
+                <button id="reset-btn">重置</button>
+                <button id="download-template-btn">下载模板</button>
+                <button id="import-names-btn">导入姓名</button>
+                <input type="file" id="file-input" accept=".txt">
+            </div>
+        </div>
+        
+        <div id="canvas-container"></div>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="zoom-controls">
+            <div class="zoom-btn" id="zoom-in">+</div>
+            <div class="zoom-btn" id="zoom-out">-</div>
+        </div>
+        
+        <div class="student-count">总学生数: <span id="count">30</span></div>
+    </div>
+    
+    <div class="instructions">提示：可以用鼠标拖动旋转球体，滚轮或按钮缩放，从不同角度查看学生名字</div>
+
+    <!-- 将three.js脚本放在body底部并使用defer优化加载 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    
+    <script>
+        // 初始化变量
+        let scene, camera, renderer, sphere, names;
+        let isRotating = true;
+        let rotationSpeed = 0.02;
+        let selectedStudent = null;
+        let nameObjects = [];
+        let isAccelerating = false;
+
+        // 汉字转拼音的简化实现
+        function getPinyin(name) {
+            // 简化的拼音映射表
+            const pinyinMap = {
+                '陈': 'chén', '司': 'sī', '晨': 'chén', '晚': 'wǎn', '予': 'yǔ',
+                '羽': 'yǔ', '汐': 'xī', '代': 'dài', '皓': 'hào', '文': 'wén',
+                '彦': 'yàn', '淇': 'qí', '邓': 'dèng', '俊': 'jùn', '豪': 'háo',
+                '刁': 'diāo', '健': 'jiàn', '峰': 'fēng', '范': 'fàn', '严': 'yán',
+                '元': 'yuán', '龚': 'gōng', '宇': 'yǔ', '昊': 'hào', '谷': 'gǔ',
+                '根': 'gēn', '育': 'yù', '韩': 'hán', '沐': 'mù', '珊': 'shān',
+                '贺': 'hè', '辰': 'chén', '胡': 'hú', '春': 'chūn', '雷': 'léi',
+                '黄': 'huáng', '芷': 'zhǐ', '瑄': 'xuān', '蒋': 'jiǎng', '欣': 'xīn',
+                '颖': 'yǐng', '康': 'kāng', '厚': 'hòu', '赞': 'zàn', '心': 'xīn',
+                '湉': 'tián', '梓': 'zǐ', '黎': 'lí', '岑': 'cén', '李': 'lǐ',
+                '程': 'chéng', '韵': 'yùn', '乐': 'lè', '瑶': 'yáo', '刘': 'liú',
+                '霖': 'lín', '罗': 'luó', '浩': 'hào', '轩': 'xuān', '馨': 'xīn',
+                '语': 'yǔ', '龙': 'lóng', '若': 'ruò', '希': 'xī', '彬': 'bīn',
+                '倩': 'qiàn', '吕': 'lǚ', '品': 'pǐn', '谚': 'yàn', '马': 'mǎ',
+                '艺': 'yì', '彭': 'péng', '任': 'rèn', '丞': 'chéng', '宋': 'sòng',
+                '弈': 'yì', '棋': 'qí', '苏': 'sū', '灵': 'líng', '枫': 'fēng',
+                '唐': 'táng', '铱': 'yī', '澜': 'lán', '田': 'tián', '子': 'zǐ',
+                '墨': 'mò', '汪': 'wāng', '思': 'sī', '炜': 'wěi', '王': 'wáng',
+                '家': 'jiā', '航': 'háng', '昕': 'xīn', '宸': 'chén', '一': 'yī',
+                '欢': 'huān', '吴': 'wú', '汐': 'xī', '肖': 'xiāo', '曾': 'zēng',
+                '笙': 'shēng', '桉': 'ān', '张': 'zhāng', '景': 'jǐng', '婧': 'jìng',
+                '妍': 'yán', '宜': 'yí', '槿': 'jǐn', '桐': 'tóng', '赵': 'zhào',
+                '君': 'jūn', '周': 'zhōu', '萱': 'xuān', '瑾': 'jǐn', '柔': 'róu',
+                '屹': 'yì', '昱': 'yù', '惜': 'xī', '杨': 'yáng', '诺': 'nuò'
+            };
+            
+            let pinyin = '';
+            for (let i = 0; i < name.length; i++) {
+                const char = name[i];
+                pinyin += (pinyinMap[char] || char) + ' ';
+            }
+            return pinyin.trim();
+        }
+
+        // 原始学生名单
+        let students = [
+          "张宇轩", "李雨桐", "王梓涵", "刘思琪", "陈俊豪", "杨佳怡", "赵浩然", "吴雨薇", "周逸飞", "徐梦琪", "马子昂", "孙雨欣", "朱梓睿", "胡语彤", "郭宇航", "林诗涵", "何子轩", "高雨菲", "罗逸晨", "郑梦琪", "梁宇恒", "谢雨桐", "宋梓豪", "唐思怡", "许浩然", "邓雨薇", "韩逸飞", "冯梦琪", "曹子昂", "彭雨欣"
+        ];
+
+        // 初始化Three.js场景
+        function init() {
+            // 创建场景
+            scene = new THREE.Scene();
+            
+            // 创建相机
+            const canvasWidth = document.getElementById('canvas-container').clientWidth;
+            const canvasHeight = window.innerHeight;
+            camera = new THREE.PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(canvasWidth, canvasHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // 添加星空背景
+            addStarBackground();
+            
+            // 创建透明球体
+            createTransparentSphere();
+            
+            // 在学生名字周围分布学生名字
+            distributeNames();
+            
+            // 添加光源
+            addLighting();
+            
+            // 添加鼠标控制
+            addControls();
+            
+            // 添加缩放控制
+            addZoomControls();
+            
+            // 开始动画循环
+            animate();
+            
+            // 窗口调整大小时调整渲染器
+            window.addEventListener('resize', onWindowResize);
+        }
+        
+        // 添加星空背景
+        function addStarBackground() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 5000; // 减少星星数量以提高性能
+            const positionArray = new Float32Array(starCount * 3);
+            
+            for (let i = 0; i < starCount * 3; i += 3) {
+                positionArray[i] = (Math.random() - 0.5) * 2000;
+                positionArray[i+1] = (Math.random() - 0.5) * 2000;
+                positionArray[i+2] = (Math.random() - 0.5) * 2000;
+            }
+            
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
+            
+            const starMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 1.2,
+                transparent: true
+            });
+            
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+        }
+        
+        // 创建透明球体
+        function createTransparentSphere() {
+            const geometry = new THREE.SphereGeometry(3, 24, 24); // 减少几何体细节提高性能
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x77aaff,
+                transparent: true,
+                opacity: 0.3,
+                specular: 0x555555,
+                shininess: 100
+            });
+            
+            sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+        }
+        
+        // 分布学生名字
+        function distributeNames() {
+            names = new THREE.Group();
+            
+            // 使用斐波那契分布算法均匀分布点
+            const numPoints = students.length;
+            const points = [];
+            
+            const phi = Math.PI * (3 - Math.sqrt(5)); // 黄金角
+            
+            for (let i = 0; i < numPoints; i++) {
+                const y = 1 - (i / (numPoints - 1)) * 2;
+                const radius = Math.sqrt(1 - y * y);
+                
+                const theta = phi * i;
+                
+                const x = Math.cos(theta) * radius;
+                const z = Math.sin(theta) * radius;
+                
+                points.push(new THREE.Vector3(x, y, z));
+            }
+            
+            // 创建文本精灵
+            const loader = new THREE.TextureLoader();
+            
+            points.forEach((point, index) => {
+                const student = students[index];
+                
+                // 创建canvas用于绘制文本
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 128;
+                
+                // 绘制文本
+                context.fillStyle = '#ffffff';
+                context.font = 'bold 28px Microsoft YaHei';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText(student, canvas.width / 2, canvas.height / 2);
+                
+                // 创建纹理和材质
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.SpriteMaterial({ 
+                    map: texture,
+                    transparent: true 
+                });
+                
+                // 创建精灵
+                const sprite = new THREE.Sprite(material);
+                sprite.position.copy(point.multiplyScalar(3.2)); // 稍微在球体外部
+                sprite.scale.set(2, 1, 1);
+                
+                // 存储学生信息
+                sprite.userData = { 
+                    student: student,
+                    originalScale: sprite.scale.clone(),
+                    originalColor: '#ffffff'
+                };
+                
+                nameObjects.push(sprite);
+                names.add(sprite);
+            });
+            
+            scene.add(names);
+        }
+        
+        // 添加光源
+        function addLighting() {
+            const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+        }
+        
+        // 添加鼠标控制
+        function addControls() {
+            let isMouseDown = false;
+            let previousMousePosition = {
+                x: 0,
+                y: 0
+            };
+            
+            renderer.domElement.addEventListener('mousedown', (e) => {
+                isMouseDown = true;
+                previousMousePosition = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+            });
+            
+            renderer.domElement.addEventListener('mouseup', () => {
+                isMouseDown = false;
+            });
+            
+            renderer.domElement.addEventListener('mousemove', (e) => {
+                if (!isMouseDown) return;
+                
+                const deltaMove = {
+                    x: e.clientX - previousMousePosition.x,
+                    y: e.clientY - previousMousePosition.y
+                };
+                
+                names.rotation.y += deltaMove.x * 0.01;
+                names.rotation.x += deltaMove.y * 0.01;
+                
+                previousMousePosition = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+            });
+            
+            // 添加触摸事件支持
+            renderer.domElement.addEventListener('touchstart', (e) => {
+                isMouseDown = true;
+                previousMousePosition = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+                e.preventDefault();
+            });
+            
+            renderer.domElement.addEventListener('touchend', () => {
+                isMouseDown = false;
+            });
+            
+            renderer.domElement.addEventListener('touchmove', (e) => {
+                if (!isMouseDown) return;
+                
+                const deltaMove = {
+                    x: e.touches[0].clientX - previousMousePosition.x,
+                    y: e.touches[0].clientY - previousMousePosition.y
+                };
+                
+                names.rotation.y += deltaMove.x * 0.01;
+                names.rotation.x += deltaMove.y * 0.01;
+                
+                previousMousePosition = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+                
+                e.preventDefault();
+            });
+        }
+        
+        // 添加缩放控制
+        function addZoomControls() {
+            // 鼠标滚轮缩放
+            renderer.domElement.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                camera.position.z += e.deltaY * 0.01;
+                // 限制缩放范围
+                camera.position.z = Math.max(3, Math.min(15, camera.position.z));
+            });
+            
+            // 缩放按钮控制
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                camera.position.z -= 0.5;
+                camera.position.z = Math.max(3, camera.position.z);
+            });
+            
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                camera.position.z += 0.5;
+                camera.position.z = Math.min(15, camera.position.z);
+            });
+        }
+        
+        // 窗口调整大小时调整渲染器
+        function onWindowResize() {
+            const canvasWidth = document.getElementById('canvas-container').clientWidth;
+            const canvasHeight = window.innerHeight;
+            
+            camera.aspect = canvasWidth / canvasHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvasWidth, canvasHeight);
+        }
+        
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (isRotating) {
+                // 根据是否加速调整旋转速度
+                const currentSpeed = isAccelerating ? rotationSpeed * 6 : rotationSpeed;
+                names.rotation.x += currentSpeed * 0.5;
+                names.rotation.y += currentSpeed;
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // 开始点名
+        function startRoll() {
+            isRotating = true;
+            isAccelerating = true; // 设置为加速状态
+            document.getElementById('result').classList.remove('show');
+            
+            // 重置所有名字的样式
+            nameObjects.forEach(name => {
+                name.scale.copy(name.userData.originalScale);
+                name.material.color.set(name.userData.originalColor);
+                name.material.opacity = 1;
+            });
+        }
+        
+        // 停止点名
+        function stopRoll() {
+            isRotating = false;
+            isAccelerating = false;
+            
+            // 随机选择一个学生
+            const randomIndex = Math.floor(Math.random() * students.length);
+            selectedStudent = students[randomIndex];
+            
+            // 显示结果
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = selectedStudent;
+            resultElement.classList.add('show');
+            
+            // 高亮选中的学生
+            nameObjects.forEach(name => {
+                if (name.userData.student === selectedStudent) {
+                    name.scale.set(3, 1.5, 1);
+                    name.material.color.set(0xffd700); // 金黄色
+                    
+                    // 旋转球体使选中的学生朝向正面
+                    const index = nameObjects.indexOf(name);
+                    const phi = Math.PI * (3 - Math.sqrt(5)); // 黄金角
+                    const y = 1 - (index / (students.length - 1)) * 2;
+                    const theta = phi * index;
+                    
+                    // 平滑旋转到选中位置
+                    smoothRotateTo(-y * 0.5, -theta + Math.PI);
+                } else {
+                    // 淡化其他学生名字
+                    name.material.opacity = 0.3;
+                }
+            });
+        }
+        
+        // 平滑旋转到目标位置
+        function smoothRotateTo(targetX, targetY) {
+            const duration = 1000; // 旋转持续时间（毫秒）
+            const startX = names.rotation.x;
+            const startY = names.rotation.y;
+            const startTime = Date.now();
+            
+            function updateRotation() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // 使用缓动函数使旋转更平滑
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                
+                names.rotation.x = startX + (targetX - startX) * easeProgress;
+                names.rotation.y = startY + (targetY - startY) * easeProgress;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateRotation);
+                }
+            }
+            
+            updateRotation();
+        }
+        
+        // 下载模板文件
+        function downloadTemplate() {
+            const templateContent = '张三\n李四\n王五\n赵六\n\n# 使用说明：\n# 1. 每行一个学生姓名\n# 2. 删除示例姓名，填入真实姓名\n# 3. 保存为.txt文件\n# 4. 点击导入姓名按钮上传';
+            
+            const blob = new Blob([templateContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '学生姓名模板.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        // 导入姓名文件
+        function importNames() {
+            document.getElementById('file-input').click();
+        }
+        
+        // 处理文件上传
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                // 按行分割，过滤空行和注释行
+                const newStudents = content
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line && !line.startsWith('#'));
+                
+                if (newStudents.length === 0) {
+                    alert('文件中没有有效的学生姓名！');
+                    return;
+                }
+                
+                // 更新学生名单
+                students = newStudents;
+                
+                // 清除旧的名字对象
+                nameObjects.forEach(obj => {
+                    names.remove(obj);
+                });
+                nameObjects = [];
+                
+                // 重新分布名字
+                distributeNames();
+                
+                // 更新学生总数
+                document.getElementById('count').textContent = students.length;
+                
+                // 重置状态
+                reset();
+                
+                alert(`成功导入 ${students.length} 个学生姓名！`);
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+            
+            // 清空input，允许重复上传同一文件
+            event.target.value = '';
+        }
+        
+        // 重置
+        function reset() {
+            isRotating = true;
+            isAccelerating = false;
+            document.getElementById('result').classList.remove('show');
+            
+            // 重置所有名字的样式
+            nameObjects.forEach(name => {
+                name.scale.copy(name.userData.originalScale);
+                name.material.color.set(name.userData.originalColor);
+                name.material.opacity = 1;
+            });
+            
+            // 随机旋转角度
+            names.rotation.x = Math.random() * Math.PI * 2;
+            names.rotation.y = Math.random() * Math.PI * 2;
+            
+            // 重置相机位置
+            camera.position.z = 5;
+        }
+        
+        // 初始化
+        function initializeApp() {
+            // 检查three.js是否已加载
+            if (typeof THREE === 'undefined') {
+                console.error('Three.js not loaded');
+                return;
+            }
+            
+            init();
+            
+            // 添加按钮事件监听
+            document.getElementById('start-btn').addEventListener('click', startRoll);
+            document.getElementById('stop-btn').addEventListener('click', stopRoll);
+            document.getElementById('reset-btn').addEventListener('click', reset);
+            document.getElementById('download-template-btn').addEventListener('click', downloadTemplate);
+            document.getElementById('import-names-btn').addEventListener('click', importNames);
+            document.getElementById('file-input').addEventListener('change', handleFileUpload);
+            
+            // 显示学生总数
+            document.getElementById('count').textContent = students.length;
+        }
+        
+        // 确保three.js加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
